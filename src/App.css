@@ -30,7 +30,7 @@
 .flyer {
   stroke-dasharray: 100px, 100px;
   stroke-dashoffset: 500;
-  animation: dash 3s linear infinite;
+  /* animation: dash 3s linear infinite; */
   fill: none;
   stroke-linecap: round;
 }

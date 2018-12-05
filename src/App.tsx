@@ -2,6 +2,7 @@ import * as React from 'react';
 import './App.css';
 import Earth from './Earth';
 import { Flyer, City } from './Interface';
+import * as data from './data/airlines_complete.json'
 
 
 class App extends React.Component {
@@ -20,35 +21,36 @@ class App extends React.Component {
     //   i++
     // }
     // return flyers
-    return [
-      {
-        start: [20, 20],
-        end: [40, 40],
-        properties: {
-          size: 2,
-          startCity: '20',
-          endCity: '40'
-        }
-      },
-      {
-        start: [20, 20],
-        end: [0, 0],
-        properties: {
-          size: 2,
-          startCity: '20',
-          endCity: '0'
-        }
-      },
-      {
-        start: [40, 40],
-        end: [0, 0],
-        properties: {
-          size: 2,
-          startCity: '40',
-          endCity: '0'
-        }
-      }
-    ]
+    // return [
+    //   {
+    //     start: [20, 20],
+    //     end: [40, 40],
+    //     properties: {
+    //       size: 2,
+    //       startCity: '20',
+    //       endCity: '40'
+    //     }
+    //   },
+    //   {
+    //     start: [20, 20],
+    //     end: [0, 0],
+    //     properties: {
+    //       size: 2,
+    //       startCity: '20',
+    //       endCity: '0'
+    //     }
+    //   },
+    //   {
+    //     start: [40, 40],
+    //     end: [0, 0],
+    //     properties: {
+    //       size: 2,
+    //       startCity: '40',
+    //       endCity: '0'
+    //     }
+    //   }
+    // ]
+    return data.slice(0, 1000) as any
   }
   private getCities = (flyers: Flyer[]) => {
     var cities: City[] = []
