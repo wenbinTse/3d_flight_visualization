@@ -7,10 +7,10 @@ import * as data from './data/airlines_complete.json'
 
 class App extends React.Component {
   private dummyData = (num: number) : Flyer[] => {
-    // var flyers : Flyer[] = [];
-    // var i = 0
+    // let flyers : Flyer[] = [];
+    // let i = 0
     // while (i < num) {
-    //   var tmp: Flyer = {
+    //   let tmp: Flyer = {
     //     start: [Math.random() * 360 - 180, Math.random() * 180 -90],
     //     end: [Math.random() * 360 - 180, Math.random() * 180 -90],
     //     properties: {
@@ -50,28 +50,29 @@ class App extends React.Component {
     //     }
     //   }
     // ]
-    return data.slice(0, 1000) as any
-  }
+    return data.slice(0, 600) as any
+  };
+
   private getCities = (flyers: Flyer[]) => {
-    var cities: City[] = []
+    let cities: City[] = [];
     flyers.forEach(f => {
       cities.push({
         position: f.start,
         properties: {name: f.properties.startCity}
-      })
+      });
       cities.push({
         position: f.end,
         properties: {name: f.properties.endCity}
       })
-    })
-    var helper = new Map()
+    });
+    let helper = new Map();
     return cities.filter(c => !helper.get(c.properties.name) && helper.set(c.properties.name, 1))
-  }
+  };
+
   public render() {
-    var width = window.innerWidth, height = window.innerHeight
-    var flyers = this.dummyData(20)
-    var cities = this.getCities(flyers)
-    console.log(cities)
+    let width = window.innerWidth, height = window.innerHeight;
+    let flyers = this.dummyData(20);
+    let cities = this.getCities(flyers);
     return (
      <Earth width={width} height={height} flyers={this.dummyData(20)} cities={cities}/>
     );

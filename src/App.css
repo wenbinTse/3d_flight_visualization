@@ -30,7 +30,7 @@
 .flyer {
   stroke-dasharray: 100px, 100px;
   stroke-dashoffset: 500;
-  /* animation: dash 3s linear infinite; */
+  animation: dash 3s linear infinite;
   fill: none;
   stroke-linecap: round;
 }
@@ -43,27 +43,25 @@
 
 .Button-container {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 0;
+  left: 0;
+  padding: 8px;
+  background: black;
+  color: white;
 }
 
 .Button-container > button {
   padding: 8px
 }
 
-.flyer:hover {
-  stroke: red;
-  cursor: pointer;
-  animation: none;
-  stroke-dasharray: 100px, 0;
-}
 
-.city {
-  fill: yellow;
-  stroke: none;
-}
-
-.city:hover {
-  fill: greenyellow;
-  cursor: pointer;
+.City-detail-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: black;
+  height: 25%;
+  width: 25%;
+  color: white;
+  padding: 8px;
 }
