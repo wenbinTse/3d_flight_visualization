@@ -1,0 +1,13 @@
+/*<input type="range"/>
+Style for range input
+*/
+
+.Range_container {
+    display: flex;
+    align-items: center;
+    color: black;
+}
+
+.Range_container > * {
+    margin: 8px;
+}

@@ -1,0 +1,1466 @@
+{
+    "4": {
+        "name": "阿富汗",
+        "englishName": "Afghanistan",
+        "code3": "AFG",
+        "code2": "4"
+    },
+    "248": {
+        "name": "奥兰群岛",
+        "englishName": "Aland Islands",
+        "code3": "ALA",
+        "code2": "248"
+    },
+    "8": {
+        "name": "阿尔巴尼亚",
+        "englishName": "Albania",
+        "code3": "ALB",
+        "code2": "8"
+    },
+    "12": {
+        "name": "阿尔及利亚",
+        "englishName": "Algeria",
+        "code3": "DZA",
+        "code2": "12"
+    },
+    "16": {
+        "name": "美属萨摩亚",
+        "englishName": "American Samoa",
+        "code3": "ASM",
+        "code2": "16"
+    },
+    "20": {
+        "name": "安道尔",
+        "englishName": "Andorra",
+        "code3": "AND",
+        "code2": "20"
+    },
+    "24": {
+        "name": "安哥拉",
+        "englishName": "Angola",
+        "code3": "AGO",
+        "code2": "24"
+    },
+    "660": {
+        "name": "安圭拉",
+        "englishName": "Anguilla",
+        "code3": "AIA",
+        "code2": "660"
+    },
+    "10": {
+        "name": "南极洲",
+        "englishName": "Antarctica",
+        "code3": "ATA",
+        "code2": "10"
+    },
+    "28": {
+        "name": "安提瓜和巴布达",
+        "englishName": "Antigua and Barbuda",
+        "code3": "ATG",
+        "code2": "28"
+    },
+    "32": {
+        "name": "阿根廷",
+        "englishName": "Argentina",
+        "code3": "ARG",
+        "code2": "32"
+    },
+    "51": {
+        "name": "亚美尼亚",
+        "englishName": "Armenia",
+        "code3": "ARM",
+        "code2": "51"
+    },
+    "533": {
+        "name": "阿鲁巴",
+        "englishName": "Aruba",
+        "code3": "ABW",
+        "code2": "533"
+    },
+    "36": {
+        "name": "澳大利亚",
+        "englishName": "Australia",
+        "code3": "AUS",
+        "code2": "36"
+    },
+    "40": {
+        "name": "奥地利",
+        "englishName": "Austria",
+        "code3": "AUT",
+        "code2": "40"
+    },
+    "31": {
+        "name": "阿塞拜疆",
+        "englishName": "Azerbaijan",
+        "code3": "AZE",
+        "code2": "31"
+    },
+    "44": {
+        "name": "巴哈马",
+        "englishName": "Bahamas (The)",
+        "code3": "BHS",
+        "code2": "44"
+    },
+    "48": {
+        "name": "巴林",
+        "englishName": "Bahrain",
+        "code3": "BHR",
+        "code2": "48"
+    },
+    "50": {
+        "name": "孟加拉国",
+        "englishName": "Bangladesh",
+        "code3": "BGD",
+        "code2": "50"
+    },
+    "52": {
+        "name": "巴巴多斯",
+        "englishName": "Barbados",
+        "code3": "BRB",
+        "code2": "52"
+    },
+    "112": {
+        "name": "白俄罗斯",
+        "englishName": "Belarus",
+        "code3": "BLR",
+        "code2": "112"
+    },
+    "56": {
+        "name": "比利时",
+        "englishName": "Belgium",
+        "code3": "BEL",
+        "code2": "56"
+    },
+    "84": {
+        "name": "伯利兹",
+        "englishName": "Belize",
+        "code3": "BLZ",
+        "code2": "84"
+    },
+    "204": {
+        "name": "贝宁",
+        "englishName": "Benin",
+        "code3": "BEN",
+        "code2": "204"
+    },
+    "60": {
+        "name": "百慕大",
+        "englishName": "Bermuda",
+        "code3": "BMU",
+        "code2": "60"
+    },
+    "64": {
+        "name": "不丹",
+        "englishName": "Bhutan",
+        "code3": "BTN",
+        "code2": "64"
+    },
+    "68": {
+        "name": "玻利维亚",
+        "englishName": "Bolivia",
+        "code3": "BOL",
+        "code2": "68"
+    },
+    "70": {
+        "name": "波黑",
+        "englishName": "Bosnia and Herzegovina",
+        "code3": "BIH",
+        "code2": "70"
+    },
+    "72": {
+        "name": "博茨瓦纳",
+        "englishName": "Botswana",
+        "code3": "BWA",
+        "code2": "72"
+    },
+    "74": {
+        "name": "布维岛",
+        "englishName": "Bouvet Island",
+        "code3": "BVT",
+        "code2": "74"
+    },
+    "76": {
+        "name": "巴西",
+        "englishName": "Brazil",
+        "code3": "BRA",
+        "code2": "76"
+    },
+    "86": {
+        "name": "英属印度洋领地",
+        "englishName": "British Indian Ocean Territory (the)",
+        "code3": "IOT",
+        "code2": "86"
+    },
+    "96": {
+        "name": "文莱",
+        "englishName": "Brunei Darussalam",
+        "code3": "BRN",
+        "code2": "96"
+    },
+    "100": {
+        "name": "保加利亚",
+        "englishName": "Bulgaria",
+        "code3": "BGR",
+        "code2": "100"
+    },
+    "854": {
+        "name": "布基纳法索",
+        "englishName": "Burkina Faso",
+        "code3": "BFA",
+        "code2": "854"
+    },
+    "108": {
+        "name": "布隆迪",
+        "englishName": "Burundi",
+        "code3": "BDI",
+        "code2": "108"
+    },
+    "116": {
+        "name": "柬埔寨",
+        "englishName": "Cambodia",
+        "code3": "KHM",
+        "code2": "116"
+    },
+    "120": {
+        "name": "喀麦隆",
+        "englishName": "Cameroon",
+        "code3": "CMR",
+        "code2": "120"
+    },
+    "124": {
+        "name": "加拿大",
+        "englishName": "Canada",
+        "code3": "CAN",
+        "code2": "124"
+    },
+    "132": {
+        "name": "佛得角",
+        "englishName": "Cape Verde",
+        "code3": "CPV",
+        "code2": "132"
+    },
+    "136": {
+        "name": "开曼群岛",
+        "englishName": "Cayman Islands (the)",
+        "code3": "CYM",
+        "code2": "136"
+    },
+    "140": {
+        "name": "中非",
+        "englishName": "Central African Republic (the)",
+        "code3": "CAF",
+        "code2": "140"
+    },
+    "148": {
+        "name": "乍得",
+        "englishName": "Chad",
+        "code3": "TCD",
+        "code2": "148"
+    },
+    "152": {
+        "name": "智利",
+        "englishName": "Chile",
+        "code3": "CHL",
+        "code2": "152"
+    },
+    "156": {
+        "name": "中国",
+        "englishName": "China",
+        "code3": "CHN",
+        "code2": "156"
+    },
+    "162": {
+        "name": "圣诞岛",
+        "englishName": "Christmas Island",
+        "code3": "CXR",
+        "code2": "162"
+    },
+    "166": {
+        "name": "科科斯（基林）群岛",
+        "englishName": "Cocos (Keeling) Islands (the)",
+        "code3": "CCK",
+        "code2": "166"
+    },
+    "170": {
+        "name": "哥伦比亚",
+        "englishName": "Colombia",
+        "code3": "COL",
+        "code2": "170"
+    },
+    "174": {
+        "name": "科摩罗",
+        "englishName": "Comoros",
+        "code3": "COM",
+        "code2": "174"
+    },
+    "178": {
+        "name": "刚果（布）",
+        "englishName": "Congo",
+        "code3": "COG",
+        "code2": "178"
+    },
+    "180": {
+        "name": "刚果（金）",
+        "englishName": "Congo (the Democratic Republic of the)",
+        "code3": "COD",
+        "code2": "180"
+    },
+    "184": {
+        "name": "库克群岛",
+        "englishName": "Cook Islands (the)",
+        "code3": "COK",
+        "code2": "184"
+    },
+    "188": {
+        "name": "哥斯达黎加",
+        "englishName": "Costa Rica",
+        "code3": "CRI",
+        "code2": "188"
+    },
+    "384": {
+        "name": "科特迪瓦",
+        "englishName": "C?te d'Ivoire",
+        "code3": "CIV",
+        "code2": "384"
+    },
+    "191": {
+        "name": "克罗地亚",
+        "englishName": "Croatia",
+        "code3": "HRV",
+        "code2": "191"
+    },
+    "192": {
+        "name": "古巴",
+        "englishName": "Cuba",
+        "code3": "CUB",
+        "code2": "192"
+    },
+    "196": {
+        "name": "塞浦路斯",
+        "englishName": "Cyprus",
+        "code3": "CYP",
+        "code2": "196"
+    },
+    "203": {
+        "name": "捷克",
+        "englishName": "Czech Republic (the)",
+        "code3": "CZE",
+        "code2": "203"
+    },
+    "208": {
+        "name": "丹麦",
+        "englishName": "Denmark",
+        "code3": "DNK",
+        "code2": "208"
+    },
+    "262": {
+        "name": "吉布提",
+        "englishName": "Djibouti",
+        "code3": "DJI",
+        "code2": "262"
+    },
+    "212": {
+        "name": "多米尼克",
+        "englishName": "Dominica",
+        "code3": "DMA",
+        "code2": "212"
+    },
+    "214": {
+        "name": "多米尼加",
+        "englishName": "Dominican Republic (the)",
+        "code3": "DOM",
+        "code2": "214"
+    },
+    "218": {
+        "name": "厄瓜多尔",
+        "englishName": "Ecuador",
+        "code3": "ECU",
+        "code2": "218"
+    },
+    "818": {
+        "name": "埃及",
+        "englishName": "Egypt",
+        "code3": "EGY",
+        "code2": "818"
+    },
+    "222": {
+        "name": "萨尔瓦多",
+        "englishName": "El Salvador",
+        "code3": "SLV",
+        "code2": "222"
+    },
+    "226": {
+        "name": "赤道几内亚",
+        "englishName": "Equatorial Guinea",
+        "code3": "GNQ",
+        "code2": "226"
+    },
+    "232": {
+        "name": "厄立特里亚",
+        "englishName": "Eritrea",
+        "code3": "ERI",
+        "code2": "232"
+    },
+    "233": {
+        "name": "爱沙尼亚",
+        "englishName": "Estonia",
+        "code3": "EST",
+        "code2": "233"
+    },
+    "231": {
+        "name": "埃塞俄比亚",
+        "englishName": "Ethiopia",
+        "code3": "ETH",
+        "code2": "231"
+    },
+    "238": {
+        "name": "福克兰群岛（马尔维纳斯）",
+        "englishName": "Falkland Islands (the) [Malvinas]",
+        "code3": "FLK",
+        "code2": "238"
+    },
+    "234": {
+        "name": "法罗群岛",
+        "englishName": "Faroe Islands (the)",
+        "code3": "FRO",
+        "code2": "234"
+    },
+    "242": {
+        "name": "斐济",
+        "englishName": "Fiji",
+        "code3": "FJI",
+        "code2": "242"
+    },
+    "246": {
+        "name": "芬兰",
+        "englishName": "Finland",
+        "code3": "FIN",
+        "code2": "246"
+    },
+    "250": {
+        "name": "法国",
+        "englishName": "France",
+        "code3": "FRA",
+        "code2": "250"
+    },
+    "254": {
+        "name": "法属圭亚那",
+        "englishName": "French Guiana",
+        "code3": "GUF",
+        "code2": "254"
+    },
+    "258": {
+        "name": "法属波利尼西亚",
+        "englishName": "French Polynesia",
+        "code3": "PYF",
+        "code2": "258"
+    },
+    "260": {
+        "name": "法属南部领地",
+        "englishName": "French Southern Territories (the)",
+        "code3": "ATF",
+        "code2": "260"
+    },
+    "266": {
+        "name": "加蓬",
+        "englishName": "Gabon",
+        "code3": "GAB",
+        "code2": "266"
+    },
+    "270": {
+        "name": "冈比亚",
+        "englishName": "Gambia (The)",
+        "code3": "GMB",
+        "code2": "270"
+    },
+    "268": {
+        "name": "格鲁吉亚",
+        "englishName": "Georgia",
+        "code3": "GEO",
+        "code2": "268"
+    },
+    "276": {
+        "name": "德国",
+        "englishName": "Germany",
+        "code3": "DEU",
+        "code2": "276"
+    },
+    "288": {
+        "name": "加纳",
+        "englishName": "Ghana",
+        "code3": "GHA",
+        "code2": "288"
+    },
+    "292": {
+        "name": "直布罗陀",
+        "englishName": "Gibraltar",
+        "code3": "GIB",
+        "code2": "292"
+    },
+    "300": {
+        "name": "希腊",
+        "englishName": "Greece",
+        "code3": "GRC",
+        "code2": "300"
+    },
+    "304": {
+        "name": "格陵兰",
+        "englishName": "Greenland",
+        "code3": "GRL",
+        "code2": "304"
+    },
+    "308": {
+        "name": "格林纳达",
+        "englishName": "Grenada",
+        "code3": "GRD",
+        "code2": "308"
+    },
+    "312": {
+        "name": "瓜德罗普",
+        "englishName": "Guadeloupe",
+        "code3": "GLP",
+        "code2": "312"
+    },
+    "316": {
+        "name": "关岛",
+        "englishName": "Guam",
+        "code3": "GUM",
+        "code2": "316"
+    },
+    "320": {
+        "name": "危地马拉",
+        "englishName": "Guatemala",
+        "code3": "GTM",
+        "code2": "320"
+    },
+    "831": {
+        "name": "格恩西岛",
+        "englishName": "Guernsey",
+        "code3": "GGY",
+        "code2": "831"
+    },
+    "324": {
+        "name": "几内亚",
+        "englishName": "Guinea",
+        "code3": "GIN",
+        "code2": "324"
+    },
+    "624": {
+        "name": "几内亚比绍",
+        "englishName": "Guinea-Bissau",
+        "code3": "GNB",
+        "code2": "624"
+    },
+    "328": {
+        "name": "圭亚那",
+        "englishName": "Guyana",
+        "code3": "GUY",
+        "code2": "328"
+    },
+    "332": {
+        "name": "海地",
+        "englishName": "Haiti",
+        "code3": "HTI",
+        "code2": "332"
+    },
+    "334": {
+        "name": "赫德岛和麦克唐纳岛",
+        "englishName": "Heard Island and McDonald Islands",
+        "code3": "HMD",
+        "code2": "334"
+    },
+    "336": {
+        "name": "梵蒂冈",
+        "englishName": "Holy See (the) [Vatican City State]",
+        "code3": "VAT",
+        "code2": "336"
+    },
+    "340": {
+        "name": "洪都拉斯",
+        "englishName": "Honduras",
+        "code3": "HND",
+        "code2": "340"
+    },
+    "344": {
+        "name": "中国香港",
+        "englishName": "Hong Kong",
+        "code3": "HKG",
+        "code2": "344"
+    },
+    "348": {
+        "name": "匈牙利",
+        "englishName": "Hungary",
+        "code3": "HUN",
+        "code2": "348"
+    },
+    "352": {
+        "name": "冰岛",
+        "englishName": "Iceland",
+        "code3": "ISL",
+        "code2": "352"
+    },
+    "356": {
+        "name": "印度",
+        "englishName": "India",
+        "code3": "IND",
+        "code2": "356"
+    },
+    "360": {
+        "name": "印度尼西亚",
+        "englishName": "Indonesia",
+        "code3": "IDN",
+        "code2": "360"
+    },
+    "364": {
+        "name": "伊朗",
+        "englishName": "Iran (the Islamic Republic of)",
+        "code3": "IRN",
+        "code2": "364"
+    },
+    "368": {
+        "name": "伊拉克",
+        "englishName": "Iraq",
+        "code3": "IRQ",
+        "code2": "368"
+    },
+    "372": {
+        "name": "爱尔兰",
+        "englishName": "Ireland",
+        "code3": "IRL",
+        "code2": "372"
+    },
+    "833": {
+        "name": "英国属地曼岛",
+        "englishName": "Isle of Man",
+        "code3": "IMN",
+        "code2": "833"
+    },
+    "376": {
+        "name": "以色列",
+        "englishName": "Israel",
+        "code3": "ISR",
+        "code2": "376"
+    },
+    "380": {
+        "name": "意大利",
+        "englishName": "Italy",
+        "code3": "ITA",
+        "code2": "380"
+    },
+    "388": {
+        "name": "牙买加",
+        "englishName": "Jamaica",
+        "code3": "JAM",
+        "code2": "388"
+    },
+    "392": {
+        "name": "日本",
+        "englishName": "Japan",
+        "code3": "JPN",
+        "code2": "392"
+    },
+    "832": {
+        "name": "泽西岛",
+        "englishName": "Jersey",
+        "code3": "JEY",
+        "code2": "832"
+    },
+    "400": {
+        "name": "约旦",
+        "englishName": "Jordan",
+        "code3": "JOR",
+        "code2": "400"
+    },
+    "398": {
+        "name": "哈萨克斯坦",
+        "englishName": "Kazakhstan",
+        "code3": "KAZ",
+        "code2": "398"
+    },
+    "404": {
+        "name": "肯尼亚",
+        "englishName": "Kenya",
+        "code3": "KEN",
+        "code2": "404"
+    },
+    "296": {
+        "name": "基里巴斯",
+        "englishName": "Kiribati",
+        "code3": "KIR",
+        "code2": "296"
+    },
+    "408": {
+        "name": "朝鲜",
+        "englishName": "Korea (the Democratic People's Republic of)",
+        "code3": "PRK",
+        "code2": "408"
+    },
+    "410": {
+        "name": "韩国",
+        "englishName": "Korea (the Republic of)",
+        "code3": "KOR",
+        "code2": "410"
+    },
+    "414": {
+        "name": "科威特",
+        "englishName": "Kuwait",
+        "code3": "KWT",
+        "code2": "414"
+    },
+    "417": {
+        "name": "吉尔吉斯斯坦",
+        "englishName": "Kyrgyzstan",
+        "code3": "KGZ",
+        "code2": "417"
+    },
+    "418": {
+        "name": "老挝",
+        "englishName": "Lao People's Democratic Republic (the)",
+        "code3": "LAO",
+        "code2": "418"
+    },
+    "428": {
+        "name": "拉脱维亚",
+        "englishName": "Latvia",
+        "code3": "LVA",
+        "code2": "428"
+    },
+    "422": {
+        "name": "黎巴嫩",
+        "englishName": "Lebanon",
+        "code3": "LBN",
+        "code2": "422"
+    },
+    "426": {
+        "name": "莱索托",
+        "englishName": "Lesotho",
+        "code3": "LSO",
+        "code2": "426"
+    },
+    "430": {
+        "name": "利比里亚",
+        "englishName": "Liberia",
+        "code3": "LBR",
+        "code2": "430"
+    },
+    "434": {
+        "name": "利比亚",
+        "englishName": "Libyan Arab Jamahiriya (the)",
+        "code3": "LBY",
+        "code2": "434"
+    },
+    "438": {
+        "name": "列支敦士登",
+        "englishName": "Liechtenstein",
+        "code3": "LIE",
+        "code2": "438"
+    },
+    "440": {
+        "name": "立陶宛",
+        "englishName": "Lithuania",
+        "code3": "LTU",
+        "code2": "440"
+    },
+    "442": {
+        "name": "卢森堡",
+        "englishName": "Luxembourg",
+        "code3": "LUX",
+        "code2": "442"
+    },
+    "446": {
+        "name": "中国澳门",
+        "englishName": "Macao",
+        "code3": "MAC",
+        "code2": "446"
+    },
+    "807": {
+        "name": "前南马其顿",
+        "englishName": "Macedonia (the former Yugoslav Republic of)",
+        "code3": "MKD",
+        "code2": "807"
+    },
+    "450": {
+        "name": "马达加斯加",
+        "englishName": "Madagascar",
+        "code3": "MDG",
+        "code2": "450"
+    },
+    "454": {
+        "name": "马拉维",
+        "englishName": "Malawi",
+        "code3": "MWI",
+        "code2": "454"
+    },
+    "458": {
+        "name": "马来西亚",
+        "englishName": "Malaysia",
+        "code3": "MYS",
+        "code2": "458"
+    },
+    "462": {
+        "name": "马尔代夫",
+        "englishName": "Maldives",
+        "code3": "MDV",
+        "code2": "462"
+    },
+    "466": {
+        "name": "马里",
+        "englishName": "Mali",
+        "code3": "MLI",
+        "code2": "466"
+    },
+    "470": {
+        "name": "马耳他",
+        "englishName": "Malta",
+        "code3": "MLT",
+        "code2": "470"
+    },
+    "584": {
+        "name": "马绍尔群岛",
+        "englishName": "Marshall Islands (the)",
+        "code3": "MHL",
+        "code2": "584"
+    },
+    "474": {
+        "name": "马提尼克",
+        "englishName": "Martinique",
+        "code3": "MTQ",
+        "code2": "474"
+    },
+    "478": {
+        "name": "毛利塔尼亚",
+        "englishName": "Mauritania",
+        "code3": "MRT",
+        "code2": "478"
+    },
+    "480": {
+        "name": "毛里求斯",
+        "englishName": "Mauritius",
+        "code3": "MUS",
+        "code2": "480"
+    },
+    "175": {
+        "name": "马约特",
+        "englishName": "Mayotte",
+        "code3": "MYT",
+        "code2": "175"
+    },
+    "484": {
+        "name": "墨西哥",
+        "englishName": "Mexico",
+        "code3": "MEX",
+        "code2": "484"
+    },
+    "583": {
+        "name": "密克罗尼西亚联邦",
+        "englishName": "Micronesia (the Federated States of)",
+        "code3": "FSM",
+        "code2": "583"
+    },
+    "498": {
+        "name": "摩尔多瓦",
+        "englishName": "Moldova (the Republic of)",
+        "code3": "MDA",
+        "code2": "498"
+    },
+    "492": {
+        "name": "摩纳哥",
+        "englishName": "Monaco",
+        "code3": "MCO",
+        "code2": "492"
+    },
+    "496": {
+        "name": "蒙古",
+        "englishName": "Mongolia",
+        "code3": "MNG",
+        "code2": "496"
+    },
+    "499": {
+        "name": "黑山",
+        "englishName": "Montenegro",
+        "code3": "MNE",
+        "code2": "499"
+    },
+    "500": {
+        "name": "蒙特塞拉特",
+        "englishName": "Montserrat",
+        "code3": "MSR",
+        "code2": "500"
+    },
+    "504": {
+        "name": "摩洛哥",
+        "englishName": "Morocco",
+        "code3": "MAR",
+        "code2": "504"
+    },
+    "508": {
+        "name": "莫桑比克",
+        "englishName": "Mozambique",
+        "code3": "MOZ",
+        "code2": "508"
+    },
+    "104": {
+        "name": "缅甸",
+        "englishName": "Myanmar",
+        "code3": "MMR",
+        "code2": "104"
+    },
+    "516": {
+        "name": "纳米比亚",
+        "englishName": "Namibia",
+        "code3": "NAM",
+        "code2": "516"
+    },
+    "520": {
+        "name": "瑙鲁",
+        "englishName": "Nauru",
+        "code3": "NRU",
+        "code2": "520"
+    },
+    "524": {
+        "name": "尼泊尔",
+        "englishName": "Nepal",
+        "code3": "NPL",
+        "code2": "524"
+    },
+    "528": {
+        "name": "荷兰",
+        "englishName": "Netherlands (the)",
+        "code3": "NLD",
+        "code2": "528"
+    },
+    "530": {
+        "name": "荷属安的列斯",
+        "englishName": "Netherlands Antilles (the)",
+        "code3": "ANT",
+        "code2": "530"
+    },
+    "540": {
+        "name": "新喀里多尼亚",
+        "englishName": "New Caledonia",
+        "code3": "NCL",
+        "code2": "540"
+    },
+    "554": {
+        "name": "新西兰",
+        "englishName": "New Zealand",
+        "code3": "NZL",
+        "code2": "554"
+    },
+    "558": {
+        "name": "尼加拉瓜",
+        "englishName": "Nicaragua",
+        "code3": "NIC",
+        "code2": "558"
+    },
+    "562": {
+        "name": "尼日尔",
+        "englishName": "Niger (the)",
+        "code3": "NER",
+        "code2": "562"
+    },
+    "566": {
+        "name": "尼日利亚",
+        "englishName": "Nigeria",
+        "code3": "NGA",
+        "code2": "566"
+    },
+    "570": {
+        "name": "纽埃",
+        "englishName": "Niue",
+        "code3": "NIU",
+        "code2": "570"
+    },
+    "574": {
+        "name": "诺福克岛",
+        "englishName": "Norfolk Island",
+        "code3": "NFK",
+        "code2": "574"
+    },
+    "580": {
+        "name": "北马里亚纳",
+        "englishName": "Northern Mariana Islands (the)",
+        "code3": "MNP",
+        "code2": "580"
+    },
+    "578": {
+        "name": "挪威",
+        "englishName": "Norway",
+        "code3": "NOR",
+        "code2": "578"
+    },
+    "512": {
+        "name": "阿曼",
+        "englishName": "Oman",
+        "code3": "OMN",
+        "code2": "512"
+    },
+    "586": {
+        "name": "巴基斯坦",
+        "englishName": "Pakistan",
+        "code3": "PAK",
+        "code2": "586"
+    },
+    "585": {
+        "name": "帕劳",
+        "englishName": "Palau",
+        "code3": "PLW",
+        "code2": "585"
+    },
+    "275": {
+        "name": "巴勒斯坦",
+        "englishName": "Palestinian Territory (the Occupied)",
+        "code3": "PSE",
+        "code2": "275"
+    },
+    "591": {
+        "name": "巴拿马",
+        "englishName": "Panama",
+        "code3": "PAN",
+        "code2": "591"
+    },
+    "598": {
+        "name": "巴布亚新几内亚",
+        "englishName": "Papua New Guinea",
+        "code3": "PNG",
+        "code2": "598"
+    },
+    "600": {
+        "name": "巴拉圭",
+        "englishName": "Paraguay",
+        "code3": "PRY",
+        "code2": "600"
+    },
+    "604": {
+        "name": "秘鲁",
+        "englishName": "Peru",
+        "code3": "PER",
+        "code2": "604"
+    },
+    "608": {
+        "name": "菲律宾",
+        "englishName": "Philippines (the)",
+        "code3": "PHL",
+        "code2": "608"
+    },
+    "612": {
+        "name": "皮特凯恩",
+        "englishName": "Pitcairn",
+        "code3": "PCN",
+        "code2": "612"
+    },
+    "616": {
+        "name": "波兰",
+        "englishName": "Poland",
+        "code3": "POL",
+        "code2": "616"
+    },
+    "620": {
+        "name": "葡萄牙",
+        "englishName": "Portugal",
+        "code3": "PRT",
+        "code2": "620"
+    },
+    "630": {
+        "name": "波多黎各",
+        "englishName": "Puerto Rico",
+        "code3": "PRI",
+        "code2": "630"
+    },
+    "634": {
+        "name": "卡塔尔",
+        "englishName": "Qatar",
+        "code3": "QAT",
+        "code2": "634"
+    },
+    "638": {
+        "name": "留尼汪",
+        "englishName": "Réunion",
+        "code3": "REU",
+        "code2": "638"
+    },
+    "642": {
+        "name": "罗马尼亚",
+        "englishName": "Romania",
+        "code3": "ROU",
+        "code2": "642"
+    },
+    "643": {
+        "name": "俄罗斯联邦",
+        "englishName": "Russian Federation (the)",
+        "code3": "RUS",
+        "code2": "643"
+    },
+    "646": {
+        "name": "卢旺达",
+        "englishName": "Rwanda",
+        "code3": "RWA",
+        "code2": "646"
+    },
+    "654": {
+        "name": "圣赫勒拿",
+        "englishName": "Saint Helena",
+        "code3": "SHN",
+        "code2": "654"
+    },
+    "659": {
+        "name": "圣基茨和尼维斯",
+        "englishName": "Saint Kitts and Nevis",
+        "code3": "KNA",
+        "code2": "659"
+    },
+    "662": {
+        "name": "圣卢西亚",
+        "englishName": "Saint Lucia",
+        "code3": "LCA",
+        "code2": "662"
+    },
+    "666": {
+        "name": "圣皮埃尔和密克隆",
+        "englishName": "Saint Pierre and Miquelon",
+        "code3": "SPM",
+        "code2": "666"
+    },
+    "670": {
+        "name": "圣文森特和格林纳丁斯",
+        "englishName": "Saint Vincent and the Grenadines",
+        "code3": "VCT",
+        "code2": "670"
+    },
+    "882": {
+        "name": "萨摩亚",
+        "englishName": "Samoa",
+        "code3": "WSM",
+        "code2": "882"
+    },
+    "674": {
+        "name": "圣马力诺",
+        "englishName": "San Marino",
+        "code3": "SMR",
+        "code2": "674"
+    },
+    "678": {
+        "name": "圣多美和普林西比",
+        "englishName": "Sao Tome and Principe",
+        "code3": "STP",
+        "code2": "678"
+    },
+    "682": {
+        "name": "沙特阿拉伯",
+        "englishName": "Saudi Arabia",
+        "code3": "SAU",
+        "code2": "682"
+    },
+    "686": {
+        "name": "塞内加尔",
+        "englishName": "Senegal",
+        "code3": "SEN",
+        "code2": "686"
+    },
+    "688": {
+        "name": "塞尔维亚",
+        "englishName": "Serbia",
+        "code3": "SRB",
+        "code2": "688"
+    },
+    "690": {
+        "name": "塞舌尔",
+        "englishName": "Seychelles",
+        "code3": "SYC",
+        "code2": "690"
+    },
+    "694": {
+        "name": "塞拉利昂",
+        "englishName": "Sierra Leone",
+        "code3": "SLE",
+        "code2": "694"
+    },
+    "702": {
+        "name": "新加坡",
+        "englishName": "Singapore",
+        "code3": "SGP",
+        "code2": "702"
+    },
+    "703": {
+        "name": "斯洛伐克",
+        "englishName": "Slovakia",
+        "code3": "SVK",
+        "code2": "703"
+    },
+    "705": {
+        "name": "斯洛文尼亚",
+        "englishName": "Slovenia",
+        "code3": "SVN",
+        "code2": "705"
+    },
+    "90": {
+        "name": "所罗门群岛",
+        "englishName": "Solomon Islands (the)",
+        "code3": "SLB",
+        "code2": "90"
+    },
+    "706": {
+        "name": "索马里",
+        "englishName": "Somalia",
+        "code3": "SOM",
+        "code2": "706"
+    },
+    "710": {
+        "name": "南非",
+        "englishName": "South Africa",
+        "code3": "ZAF",
+        "code2": "710"
+    },
+    "239": {
+        "name": "南乔治亚岛和南桑德韦奇岛",
+        "englishName": "South Georgia and the South Sandwich Islands",
+        "code3": "SGS",
+        "code2": "239"
+    },
+    "724": {
+        "name": "西班牙",
+        "englishName": "Spain",
+        "code3": "ESP",
+        "code2": "724"
+    },
+    "144": {
+        "name": "斯里兰卡",
+        "englishName": "Sri Lanka",
+        "code3": "LKA",
+        "code2": "144"
+    },
+    "736": {
+        "name": "苏丹",
+        "englishName": "Sudan (the)",
+        "code3": "SDN",
+        "code2": "736"
+    },
+    "740": {
+        "name": "苏里南",
+        "englishName": "Suriname",
+        "code3": "SUR",
+        "code2": "740"
+    },
+    "744": {
+        "name": "斯瓦尔巴岛和扬马延岛",
+        "englishName": "Svalbard and Jan Mayen",
+        "code3": "SJM",
+        "code2": "744"
+    },
+    "748": {
+        "name": "斯威士兰",
+        "englishName": "Swaziland",
+        "code3": "SWZ",
+        "code2": "748"
+    },
+    "752": {
+        "name": "瑞典",
+        "englishName": "Sweden",
+        "code3": "SWE",
+        "code2": "752"
+    },
+    "756": {
+        "name": "瑞士",
+        "englishName": "Switzerland",
+        "code3": "CHE",
+        "code2": "756"
+    },
+    "760": {
+        "name": "叙利亚",
+        "englishName": "Syrian Arab Republic (the)",
+        "code3": "SYR",
+        "code2": "760"
+    },
+    "158": {
+        "name": "中国台湾",
+        "englishName": "Taiwan (Province of China)",
+        "code3": "TWN",
+        "code2": "158"
+    },
+    "762": {
+        "name": "塔吉克斯坦",
+        "englishName": "Tajikistan",
+        "code3": "TJK",
+        "code2": "762"
+    },
+    "834": {
+        "name": "坦桑尼亚",
+        "englishName": "Tanzania",
+        "code3": "TZA",
+        "code2": "834"
+    },
+    "764": {
+        "name": "泰国",
+        "englishName": "Thailand",
+        "code3": "THA",
+        "code2": "764"
+    },
+    "626": {
+        "name": "东帝汶",
+        "englishName": "Timor-Leste",
+        "code3": "TLS",
+        "code2": "626"
+    },
+    "768": {
+        "name": "多哥",
+        "englishName": "Togo",
+        "code3": "TGO",
+        "code2": "768"
+    },
+    "772": {
+        "name": "托克劳",
+        "englishName": "Tokelau",
+        "code3": "TKL",
+        "code2": "772"
+    },
+    "776": {
+        "name": "汤加",
+        "englishName": "Tonga",
+        "code3": "TON",
+        "code2": "776"
+    },
+    "780": {
+        "name": "特立尼达和多巴哥",
+        "englishName": "Trinidad and Tobago",
+        "code3": "TTO",
+        "code2": "780"
+    },
+    "788": {
+        "name": "突尼斯",
+        "englishName": "Tunisia",
+        "code3": "TUN",
+        "code2": "788"
+    },
+    "792": {
+        "name": "土耳其",
+        "englishName": "Turkey",
+        "code3": "TUR",
+        "code2": "792"
+    },
+    "795": {
+        "name": "土库曼斯坦",
+        "englishName": "Turkmenistan",
+        "code3": "TKM",
+        "code2": "795"
+    },
+    "796": {
+        "name": "特克斯和凯科斯群岛",
+        "englishName": "Turks and Caicos Islands (the)",
+        "code3": "TCA",
+        "code2": "796"
+    },
+    "798": {
+        "name": "图瓦卢",
+        "englishName": "Tuvalu",
+        "code3": "TUV",
+        "code2": "798"
+    },
+    "800": {
+        "name": "乌干达",
+        "englishName": "Uganda",
+        "code3": "UGA",
+        "code2": "800"
+    },
+    "804": {
+        "name": "乌克兰",
+        "englishName": "Ukraine",
+        "code3": "UKR",
+        "code2": "804"
+    },
+    "784": {
+        "name": "阿联酋",
+        "englishName": "United Arab Emirates (the)",
+        "code3": "ARE",
+        "code2": "784"
+    },
+    "826": {
+        "name": "英国",
+        "englishName": "United Kingdom (the)",
+        "code3": "GBR",
+        "code2": "826"
+    },
+    "840": {
+        "name": "美国",
+        "englishName": "United States (the)",
+        "code3": "USA",
+        "code2": "840"
+    },
+    "581": {
+        "name": "美国本土外小岛屿",
+        "englishName": "United States Minor Outlying Islands (the)",
+        "code3": "UMI",
+        "code2": "581"
+    },
+    "858": {
+        "name": "乌拉圭",
+        "englishName": "Uruguay",
+        "code3": "URY",
+        "code2": "858"
+    },
+    "860": {
+        "name": "乌兹别克斯坦",
+        "englishName": "Uzbekistan",
+        "code3": "UZB",
+        "code2": "860"
+    },
+    "548": {
+        "name": "瓦努阿图",
+        "englishName": "Vanuatu",
+        "code3": "VUT",
+        "code2": "548"
+    },
+    "862": {
+        "name": "委内瑞拉",
+        "englishName": "Venezuela",
+        "code3": "VEN",
+        "code2": "862"
+    },
+    "704": {
+        "name": "越南",
+        "englishName": "Viet Nam",
+        "code3": "VNM",
+        "code2": "704"
+    },
+    "92": {
+        "name": "英属维尔京群岛",
+        "englishName": "Virgin Islands (British)",
+        "code3": "VGB",
+        "code2": "92"
+    },
+    "850": {
+        "name": "美属维尔京群岛",
+        "englishName": "Virgin Islands (U.S.)",
+        "code3": "VIR",
+        "code2": "850"
+    },
+    "876": {
+        "name": "瓦利斯和富图纳",
+        "englishName": "Wallis and Futuna",
+        "code3": "WLF",
+        "code2": "876"
+    },
+    "732": {
+        "name": "西撒哈拉",
+        "englishName": "Western Sahara",
+        "code3": "ESH",
+        "code2": "732"
+    },
+    "887": {
+        "name": "也门",
+        "englishName": "Yemen",
+        "code3": "YEM",
+        "code2": "887"
+    },
+    "894": {
+        "name": "赞比亚",
+        "englishName": "Zambia",
+        "code3": "ZMB",
+        "code2": "894"
+    },
+    "716": {
+        "name": "津巴布韦",
+        "englishName": "Zimbabwe",
+        "code3": "ZWE",
+        "code2": "716"
+    }
+}

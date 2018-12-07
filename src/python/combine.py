@@ -1,8 +1,12 @@
+'''
+combine airlines.json and airlines.json
+'''
+
 import json
 
-airlines_file = './data/airlines.json'
-airports_file = './data/airports.json'
-combined_file = './data/airlines_complete.json'
+airlines_file = '../data/airlines.json'
+airports_file = '../data/airports.json'
+combined_file = '../data/airlines_complete.json'
 
 def combine():
   content_line = open(airlines_file)
@@ -36,4 +40,5 @@ def combine():
     print('saved to {}'.format(combined_file))
   
 
-combine()
+if __name__ == '__main__':
+  combine()

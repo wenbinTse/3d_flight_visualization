@@ -41,27 +41,46 @@
   }
 }
 
-.Button-container {
+.Container {
   position: absolute;
-  top: 0;
-  left: 0;
   padding: 8px;
-  background: black;
+  background: aliceblue;
   color: white;
+  display: flex;
+  opacity: 0.3;
+  align-items: center;
 }
 
-.Button-container > button {
-  padding: 8px
+.Container > * {
+  margin: 8px !important;
 }
 
+.Left_top_container {
+  left: 0;
+  top: 0;
+}
+
+.Left_bottom_container {
+  left: 0;
+  bottom: 0;
+}
 
 .City-detail-container {
   position: absolute;
   top: 0;
   right: 0;
-  background: black;
+  background: aliceblue;
   height: 25%;
   width: 25%;
-  color: white;
   padding: 8px;
+  opacity: 0.6;
+}
+
+.tooltip {
+  position: absolute;
+  display: none;
+  background: aliceblue;
+  padding: 8px;
+  cursor: default;
+  opacity: 0.6;
 }

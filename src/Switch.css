@@ -1,0 +1,79 @@
+
+/*Switch*/
+/*Switch*/
+/*Switch*/
+/*Switch*/
+.Switch {
+    position: relative;
+    width: 90px;
+    margin: 0;
+}
+
+.Switch-checkbox {
+    display: none;
+}
+
+.Switch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #999999;
+    border-radius: 20px;
+}
+
+.Switch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+
+.Switch-inner::before, .Switch-inner::after {
+    display: block;
+    float: right;
+    width: 50%;
+    padding: 0;
+    line-height: 30px;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.Switch-inner::after {
+    content: attr(data-on);
+    padding-left: 10px;
+    background-color: black;
+    color: #FFFFFF;
+}
+
+.Switch-inner::before {
+    content: attr(data-off);
+    padding-right: 10px;
+    background-color: #EEEEEE;
+    color: #999999;
+    text-align: right;
+}
+
+.Switch-switch {
+    position: absolute;
+    display: block;
+    width: 22px;
+    height: 22px;
+    margin: 4px;
+    background: #FFFFFF;
+    top: 0;
+    bottom: 0;
+    right: 56px;
+    border: 2px solid #999999;
+    border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+
+.Switch-checkbox:checked + .Switch-label .Switch-inner {
+    margin-left: 0;
+}
+
+.Switch-checkbox:checked + .Switch-label .Switch-switch {
+    right: 0;
+}

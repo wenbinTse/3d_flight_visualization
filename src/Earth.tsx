@@ -1,19 +1,29 @@
 import * as React from 'react';
 import './App.css';
+import './Switch.css'
+import './RangeInput.css'
 
 import * as d3 from 'd3'
 import {event, polygonContains} from 'd3'
-import {City, Flyer, Pos} from './Interface';
-import {getData, getGeoJsonForFlyers} from './Util';
+import {City, Airline, Pos} from './Interface';
 import CityDetail from "./CityDetail";
 import CityToCityDetail from "./CityToCityDetail";
+import {ChangeEvent} from "react";
 
 interface Props {
   // interface
   width: number
   height: number
-  flyers: Flyer[]
+  airlines: Airline[]
   cities: City[]
+  airlineGeoData: {lines: any[], points: any[]}
+  mapGeoData: {countries: any[], land: any, usa: any[], china: any[]}
+  maxAirlineNum: number
+  updateAirline: (num: number) => {
+    airlines: Airline[],
+    cities: City[],
+    airlineGeoData: {lines: any[], points: any[]}
+  }
 }
 
 const OCEAN_COLOR = '#696969';
@@ -35,6 +45,8 @@ const USA_ID = 840;
 class Earth extends React.Component<Props, {}> {
 
   canvas: d3.Selection<HTMLCanvasElement, {}, HTMLElement, any>;
+  tooltip: d3.Selection<HTMLSpanElement, {}, HTMLElement, any>;
+  airlineNumElement: d3.Selection<HTMLSpanElement, {}, HTMLElement, any>;
   context: CanvasRenderingContext2D;
   zoomer = d3.zoom();
 
@@ -43,11 +55,11 @@ class Earth extends React.Component<Props, {}> {
   threeDi = true;
 
   // ms to wait after dragging before auto-rotating
-  rotationDelay = 10 * 1000;
+  rotationDelay = 3 * 1000;
   rotating = true;
   allowRotate = true;
   // auto-rotation speed
-  degPerSec = 3; degPerMs = this.degPerSec / 1000;
+  degPerSec = 1; degPerMs = this.degPerSec / 1000;
   showChina: boolean = false; showUsa: boolean = false;
   // the value of scale factor when to show/hide the country details
   detailFactor = 2.5;
@@ -71,12 +83,13 @@ class Earth extends React.Component<Props, {}> {
 
   originPointRadius = this.path.pointRadius();
 
-  wholeData = getData();
-  countries = this.wholeData.countries;
-  land = this.wholeData.land;
-  usa = this.wholeData.usa;
-  china = this.wholeData.china;
+  // Map geoJson data
+  countries: any[];
+  land: any;
+  usa: any[];
+  china: any[];
 
+  // Airline geoJson data
   lines: any[];
   points: any[];
 
@@ -92,20 +105,48 @@ class Earth extends React.Component<Props, {}> {
     this.width = props.width;
     this.height = props.height;
 
-    const flyerData = getGeoJsonForFlyers(props.flyers, props.cities);
-    this.lines = flyerData.lines;
-    this.points = flyerData.points;
+    this.countries = props.mapGeoData.countries;
+    this.land = props.mapGeoData.land;
+    this.china = props.mapGeoData.china;
+    this.usa = props.mapGeoData.usa;
+
+    this.lines = props.airlineGeoData.lines;
+    this.points = props.airlineGeoData.points;
   }
 
   render() {
     return (
       <div id='globe'>
         <canvas id='canvas'/>
-        <CityDetail flyers={this.lines} ref={(r) => this.cityDetail = r!}/>
-        <CityToCityDetail flyers={this.lines} ref={(r) => this.cityToCityDetail = r!}/>
-        <div className='Button-container'>
-          <button onClick={() => this.changeProjection()}>3D/2D转换</button>
+        <CityDetail airlines={this.lines} ref={(r) => this.cityDetail = r!}/>
+        <CityToCityDetail airlines={this.lines} ref={(r) => this.cityToCityDetail = r!}/>
+        <div className='Container Left_top_container'>
+          <div className="Switch">
+            <input defaultChecked={true} className="Switch-checkbox" id="3DSwitch" type="checkbox"
+                   onChange={() => this.changeProjection()}/>
+            <label className="Switch-label" htmlFor="3DSwitch">
+              <span className="Switch-inner" data-on="3D" data-off="2D"/>
+              <span className="Switch-switch"/>
+            </label>
+          </div>
+          <div className="Switch">
+            <input className="Switch-checkbox" id="rotateSwitch" type="checkbox" defaultChecked={true}
+                   onChange={() => this.allowRotate = !this.allowRotate}/>
+            <label className="Switch-label" htmlFor="rotateSwitch">
+              <span className="Switch-inner" data-on="允许转" data-off="禁止转"/>
+              <span className="Switch-switch"/>
+            </label>
+          </div>
         </div>
+        <div className="Container Left_bottom_container">
+          <div className="Range_container">
+            <input type="range" min={0} max={this.props.maxAirlineNum} step={10}
+                   defaultValue={this.lines.length.toString()}
+                   onChange={this.onAirlineNumChange}/>
+            <span id='airlineNum'>{this.lines.length}</span>
+          </div>
+        </div>
+        <span className='tooltip' id='tooltip'>显示提示</span>
       </div>
     )
   }
@@ -131,7 +172,7 @@ class Earth extends React.Component<Props, {}> {
 
     context.beginPath();
     context.fillStyle = LAND_COLOR;
-    path(this.land); 
+    path(this.land as any);
     context.fill();
 
     context.strokeStyle = BORDER_COLOR;
@@ -159,21 +200,21 @@ class Earth extends React.Component<Props, {}> {
     }
 
     if (!this.currentArea) {
-      this.drawFlyers();
+      this.drawAirlines();
       return
     }
 
     const type = this.currentArea.properties.type;
-    // draw it before flyers
+    // draw it before airlines
     if (type == 'country' || type == 'province') {
       context.beginPath();
       context.fillStyle = HIGHLIGHT_COLOR;
       path(this.currentArea as any);
       context.fill();
 
-      this.drawFlyers()
+      this.drawAirlines()
     } else {
-      this.drawFlyers();
+      this.drawAirlines();
 
       context.beginPath();
       context.fillStyle = HIGHLIGHT_COLOR;
@@ -182,7 +223,7 @@ class Earth extends React.Component<Props, {}> {
     }
   }
 
-  private drawFlyers = () => {
+  private drawAirlines = () => {
     const context = this.context;
     const path = this.path;
 
@@ -196,7 +237,7 @@ class Earth extends React.Component<Props, {}> {
       context.beginPath(); path(d); context.fill()
     });
 
-    // need to highlight the flyers start at the 'cityChosen'
+    // need to highlight the airlines start at the 'cityChosen'
     this.lines.forEach(d => {
       const startCityId = d.properties.startCityId;
       const endCityId = d.properties.endCityId;
@@ -215,7 +256,7 @@ class Earth extends React.Component<Props, {}> {
       context.beginPath(); path(d); context.stroke()
     });
 
-    // draw the ball on flyers
+    // draw the ball on airlines
     this.path.pointRadius(2);
     context.save();
     this.lines.forEach(d => {
@@ -250,11 +291,16 @@ class Earth extends React.Component<Props, {}> {
 
   private init = () => {
     // init canvas
-    // @ts-ignore
     this.canvas = d3.select('#canvas')
       .attr('width', this.width)
       .attr('height', this.height) as d3.Selection<HTMLCanvasElement, {}, HTMLElement, any>;
-    
+
+    // init tooltip
+    this.tooltip = d3.select('#tooltip');
+    // init airlineNumElement
+    this.airlineNumElement = d3.select('#airlineNum');
+
+
     this.canvas
       .call(d3.drag()
         .on('start', this.dragStarted)
@@ -352,13 +398,25 @@ class Earth extends React.Component<Props, {}> {
     }
     if (!c) {
       this.currentArea = undefined;
+      this.tooltip.style('display', 'none');
       return
     }
-    if (c == this.currentArea) {
-      return
-    }
-    this.currentArea = c
+    this.currentArea = c;
+    if (c && c.properties.name == 'CTU') console.log(c)
+
+    const pos = d3.mouse(this.canvas.node() as any);
+    this.updateTooltip(this.currentArea.properties.name, pos[1] + 10, pos[0] + 10);
+
   };
+
+  private updateTooltip = (text: string, x: number, y: number) => {
+    this.tooltip
+      .text(text);
+
+    (this.tooltip.node() as any).style =
+      'display: block; top: ' + x + 'px; left: ' + y + 'px;';
+  };
+
 
   private onClick = () => {
     let pos = this.projection.invert!(d3.mouse(this.canvas.node() as any))!;
@@ -385,6 +443,20 @@ class Earth extends React.Component<Props, {}> {
     this.canvas.attr('width', this.width)
       .attr('height', this.height);
     this.projection.translate([this.width/2, this.height/2]);
+  };
+
+  private onAirlineNumChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.persist();
+    const num = parseInt(e.target.value);
+    this.cityChosen = undefined;
+    this.secondCityChosen = undefined;
+
+    // update airline data
+    const newData = this.props.updateAirline(num);
+    this.lines = newData.airlineGeoData.lines;
+    this.points = newData.airlineGeoData.points;
+
+    this.airlineNumElement.text(num);
   };
 
 

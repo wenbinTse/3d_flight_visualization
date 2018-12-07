@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 interface Props {
-  flyers: any[]
+  airlines: any[]
 }
 
 interface State {
-  flyers: any[],
+  airlines: any[],
   cityGeo?: any,
   show: boolean
 }
@@ -15,17 +15,17 @@ class CityDetail extends React.Component<Props, State>{
     super(props)
     this.state = {
       show: false,
-      flyers: []
+      airlines: []
     }
   }
 
   public show = (cityGeo: any) => {
     const cityId = cityGeo.properties.id;
-    // get the flyers start at the given city
-    const flyers = this.props.flyers.filter(d =>
+    // get the airlines start at the given city
+    const airlines = this.props.airlines.filter(d =>
       d.properties.startCityId == cityId);
     this.setState({
-      flyers,
+      airlines,
       show: true,
       cityGeo
     })
@@ -42,7 +42,7 @@ class CityDetail extends React.Component<Props, State>{
         <div>
           详细信息
           {
-            this.state.flyers.map(f =>
+            this.state.airlines.map(f =>
               <div>
                 {f.properties.startCity + ' 到 ' + f.properties.endCity}
               </div>)
