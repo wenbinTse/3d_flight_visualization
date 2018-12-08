@@ -49,10 +49,15 @@
   display: flex;
   opacity: 0.3;
   align-items: center;
+  z-index: 3;
 }
 
 .Container > * {
   margin: 8px !important;
+}
+
+.Container:hover {
+  opacity: 0.7;
 }
 
 .Left_top_container {
@@ -69,18 +74,30 @@
   position: absolute;
   top: 0;
   right: 0;
-  background: aliceblue;
   height: 25%;
   width: 25%;
   padding: 8px;
-  opacity: 0.6;
 }
 
 .tooltip {
   position: absolute;
+  background: white;
   display: none;
-  background: aliceblue;
   padding: 8px;
   cursor: default;
   opacity: 0.6;
+}
+
+#backgroundCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }

@@ -12,7 +12,7 @@ interface State {
 
 class CityDetail extends React.Component<Props, State>{
   constructor(props: Props) {
-    super(props)
+    super(props);
     this.state = {
       show: false,
       airlines: []
@@ -35,9 +35,9 @@ class CityDetail extends React.Component<Props, State>{
 
   render() {
     if (!this.state.show)
-      return <span>df</span>;
+      return null;
     return  (
-      <div className='City-detail-container'>
+      <div className='Container City-detail-container'>
         <span>城市: {this.state.cityGeo.properties.name}</span>
         <div>
           详细信息

@@ -8,7 +8,7 @@ import {Airline} from "./Interface";
 
 class App extends React.Component {
 
-  // TODO(yifei) 我现在简单的返回前num条记录，后边需要修改采样策略
+  // TODO(yifei) 我现在简单地返回前num条记录，后边需要修改采样策略
   private getAirlines = (num: number) => (data.slice(0, num) as Airline[]);
 
   mapGeoData = getMapGeoData();

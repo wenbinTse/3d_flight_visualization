@@ -117,6 +117,7 @@ class Earth extends React.Component<Props, {}> {
   render() {
     return (
       <div id='globe'>
+        <canvas id='backgroundCanvas'/>
         <canvas id='canvas'/>
         <CityDetail airlines={this.lines} ref={(r) => this.cityDetail = r!}/>
         <CityToCityDetail airlines={this.lines} ref={(r) => this.cityToCityDetail = r!}/>
@@ -131,7 +132,7 @@ class Earth extends React.Component<Props, {}> {
           </div>
           <div className="Switch">
             <input className="Switch-checkbox" id="rotateSwitch" type="checkbox" defaultChecked={true}
-                   onChange={() => this.allowRotate = !this.allowRotate}/>
+                   onChange={(e) => this.allowRotate = !this.allowRotate}/>
             <label className="Switch-label" htmlFor="rotateSwitch">
               <span className="Switch-inner" data-on="允许转" data-off="禁止转"/>
               <span className="Switch-switch"/>
@@ -162,9 +163,10 @@ class Earth extends React.Component<Props, {}> {
 
   // render the map
   private canvasRender() {
+  
     const context = this.context;
     const path = this.path;
-
+  
     context.clearRect(0, 0, this.width, this.height);
 
     const sphere: any = { type: "Sphere" };
@@ -222,6 +224,41 @@ class Earth extends React.Component<Props, {}> {
       context.fill()
     }
   }
+  
+  
+  // render the star background
+  private backgroundRender = () => {
+    
+    // draw star
+    const starCanvas = document.createElement('canvas');
+    const starContext = starCanvas.getContext('2d')!;
+    starCanvas.width = 50;
+    starCanvas.height = 50;
+    const half = starCanvas.width / 2,
+      gradient = starContext.createRadialGradient(half, half, 0, half, half, half);
+    gradient.addColorStop(0.025, '#fff');
+    gradient.addColorStop(0.8, 'rgba(100, 149, 237, 10)');
+    gradient.addColorStop(0.9, 'rgba(30, 144, 255, 10)');
+    gradient.addColorStop(1, 'transparent');
+    starContext.fillStyle = gradient;
+    starContext.beginPath();
+    starContext.arc(half, half, half, 0, Math.PI * 2);
+    starContext.fill();
+    
+    // draw background
+    const backgroundCanvas = d3.select('#backgroundCanvas')
+      .attr('width', this.width)
+      .attr('height', this.height) as d3.Selection<HTMLCanvasElement, {}, HTMLElement, any>;
+    const backgroundContext = backgroundCanvas.node()!.getContext('2d')!;
+    
+    let starNum = 1000;
+    for (let i = 0; i < starNum; i++) {
+      const radius = Math.random() > 0.9 ? 4 + Math.random() : 2 + Math.random();
+      const x = Math.random() * this.width, y = Math.random() * this.height;
+      backgroundContext.drawImage(starCanvas as any, x, y, radius, radius);
+    }
+    
+  };
 
   private drawAirlines = () => {
     const context = this.context;
@@ -241,13 +278,15 @@ class Earth extends React.Component<Props, {}> {
     this.lines.forEach(d => {
       const startCityId = d.properties.startCityId;
       const endCityId = d.properties.endCityId;
+
+      // context.lineWidth = FLYER_WIDTH
+      context.lineWidth = FLYER_WIDTH * d.properties.size;
+
       if (!this.cityChosen) {
         context.strokeStyle = FLYER_COLOR;
-        context.lineWidth = FLYER_WIDTH
       } else if ((!this.secondCityChosen && cityChosenId != startCityId) ||
         (this.secondCityChosen && (cityChosenId != startCityId || secondChosenId != endCityId ))) {
         context.strokeStyle = NOT_HIGHLIGHT_FLYER_COLOR;
-        context.lineWidth = FLYER_WIDTH
       } else {
         context.strokeStyle = HIGHLIGHT_FLYER_COLOR;
         context.lineWidth = 2
@@ -320,8 +359,11 @@ class Earth extends React.Component<Props, {}> {
     // change the center of earth
     this.projection.translate([this.width / 2, this.height / 2]);
     
+    // draw background
+    this.backgroundRender();
+    
     // this.canvasRender()
-    this.animation()
+    this.animation();
   };
 
   private  changeProjection = () => {
@@ -346,7 +388,7 @@ class Earth extends React.Component<Props, {}> {
       this.showUsa = transform.k > this.detailFactor
     }
 
-    this.allowRotate = transform.k < this.stopRotatingFactor;
+    this.rotating = this.rotating && transform.k < this.stopRotatingFactor;
   };
 
   private animation = () => {
@@ -375,7 +417,8 @@ class Earth extends React.Component<Props, {}> {
 
   private dragged = () => {
     const delta: Pos = [event.dx, event.dy];
-    const r1: Pos = [this.r0[0] + delta[0] / 10, this.r0[1] - delta[1] / 10];
+    const speed = 100 / this.projection.scale();
+    const r1: Pos = [this.r0[0] + delta[0] * speed, this.r0[1] - delta[1] * speed];
     const t1: Pos = [this.t0[0], this.t0[1] + delta[1]];
     this.projection.rotate(r1);
     // if (!this.threeD)
@@ -443,6 +486,9 @@ class Earth extends React.Component<Props, {}> {
     this.canvas.attr('width', this.width)
       .attr('height', this.height);
     this.projection.translate([this.width/2, this.height/2]);
+    
+    // Redraw the background
+    this.backgroundRender();
   };
 
   private onAirlineNumChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -463,7 +509,6 @@ class Earth extends React.Component<Props, {}> {
   // get the area under the mouse
   private getArea = () => {
     let pos = this.projection.invert!(d3.mouse(this.canvas.node() as any))!;
-
 
     // find points first
     const point = this.getPoint(pos);
@@ -494,7 +539,7 @@ class Earth extends React.Component<Props, {}> {
   };
 
   private getPoint = (pos: Pos) => {
-    const ACC = 0.5;
+    const ACC = 500 / this.projection.scale() * 0.5;
     return this.points.find(function(f) {
       return Math.abs(f.geometry.coordinates[0] - pos[0]) < ACC
        && Math.abs(f.geometry.coordinates[1] - pos[1]) < ACC

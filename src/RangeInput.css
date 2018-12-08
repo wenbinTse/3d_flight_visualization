@@ -11,3 +11,7 @@ Style for range input
 .Range_container > * {
     margin: 8px;
 }
+
+.Range_container > span {
+    width: 40px;
+}

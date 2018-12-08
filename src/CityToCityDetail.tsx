@@ -42,7 +42,7 @@ class CityToCityDetail extends React.Component<Props, State> {
     if (!this.state.show)
       return null;
     return (
-      <div className='City-detail-container'>
+      <div className='Container City-detail-container'>
         <span>{this.state.startCityGeo.properties.name + ' 到 ' + this.state.endCityGeo.properties.name}</span>
         <div>
           详细信息

@@ -77,7 +77,7 @@ export function getGeoJsonForAirlines(airlines: Airline[], cities: City[]) {
     properties: {
       ...airline.properties,
       type: 'airline',
-      ballp: Math.random(), // the postion of the ball
+      ballp: Math.random(), // the position of the ball
       distance: d3.geoDistance(airline.start, airline.end),
       id: id++,
       startCityId: cityToId[airline.properties.startCity],
