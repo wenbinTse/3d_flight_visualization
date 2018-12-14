@@ -30,7 +30,7 @@
 .flyer {
   stroke-dasharray: 100px, 100px;
   stroke-dashoffset: 500;
-  /* animation: dash 3s linear infinite; */
+  animation: dash 3s linear infinite;
   fill: none;
   stroke-linecap: round;
 }
@@ -41,29 +41,64 @@
   }
 }
 
-.Button-container {
+.Container {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  padding: 8px;
+  background: aliceblue;
+  color: white;
+  display: flex;
+  opacity: 0.3;
+  align-items: center;
+  z-index: 3;
 }
 
-.Button-container > button {
-  padding: 8px
+.Container > * {
+  margin: 8px !important;
 }
 
-.flyer:hover {
-  stroke: red;
-  cursor: pointer;
-  animation: none;
-  stroke-dasharray: 100px, 0;
+.Container:hover {
+  opacity: 0.7;
 }
 
-.city {
-  fill: yellow;
-  stroke: none;
+.Left_top_container {
+  left: 0;
+  top: 0;
 }
 
-.city:hover {
-  fill: greenyellow;
-  cursor: pointer;
+.Left_bottom_container {
+  left: 0;
+  bottom: 0;
+}
+
+.City-detail-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 25%;
+  width: 25%;
+  padding: 8px;
+}
+
+.tooltip {
+  position: absolute;
+  background: white;
+  display: none;
+  padding: 8px;
+  cursor: default;
+  opacity: 0.6;
+  z-index: 4;
+}
+
+#backgroundCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }

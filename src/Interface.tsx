@@ -1,4 +1,4 @@
-export interface Flyer {
+export interface Airline {
   start: Pos
   end: Pos
   properties: {

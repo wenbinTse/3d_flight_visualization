@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@types/d3": "^5.0.1",
+    "@types/topojson": "^3.2.1",
     "d3": "^5.7.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-scripts-ts": "3.1.0"
+    "react-scripts-ts": "3.1.0",
+    "topojson": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts-ts start",

@@ -1,375 +1,550 @@
 import * as React from 'react';
-import * as wordJson from './world.json'
 import './App.css';
-import * as chinaJson from './data/china.json'
-import * as usJson from './data/us.json'
+import './Switch.css'
+import './RangeInput.css'
 
-import { event } from 'd3'
 import * as d3 from 'd3'
-import { Flyer, Pos, CicleSelction, PathSelction, SvgSelction, RectSelction, City } from './Interface.js';
-
-/*
-  一些小问题：
-    加载了美国地图后，旋转性能降低
-    现在是双击中国和美国显示各自的细节，之后可能需要通过放大来显示
-    二维地图我不确定用哪种投影方式
-*/
-
+import {event, polygonContains} from 'd3'
+import {City, Airline, Pos} from './Interface';
+import CityDetail from "./CityDetail";
+import CityToCityDetail from "./CityToCityDetail";
+import {ChangeEvent} from "react";
 
 interface Props {
   // interface
   width: number
   height: number
-  flyers: Flyer[]
+  airlines: Airline[]
   cities: City[]
+  airlineGeoData: {lines: any[], points: any[]}
+  mapGeoData: {countries: any[], land: any, usa: any[], china: any[]}
+  maxAirlineNum: number
+  updateAirline: (num: number) => {
+    airlines: Airline[],
+    cities: City[],
+    airlineGeoData: {lines: any[], points: any[]}
+  }
 }
 
-var scaleChangeSpeed = [1.05, 0.95]
-const CHINA = 'China', US = 'United States'
+const OCEAN_COLOR = '#696969';
+const LAND_COLOR  = '#000000';
+const FLYER_COLOR = '#ffffff';
+const HIGHLIGHT_FLYER_COLOR = '#0a0';
+const NOT_HIGHLIGHT_FLYER_COLOR = '#555';
+const FLYER_WIDTH = 0.6;
+const BORDER_WIDTH = 0.2;
+const BORDER_COLOR = '#dcdcdc';
+const HIGHLIGHT_COLOR = '#a00';
+const POINT_COLOR = '#0a0';
+const HIGHLIGHT_POINT_COLOR = '#FFFF00';
+const NOT_HIGHLIGHT_POINT_COLOR = '#333';
+
+const CHINA_ID = 156;
+const USA_ID = 840;
 
 class Earth extends React.Component<Props, {}> {
-  
-  projection = d3.geoOrthographic()
-  path = d3.geoPath(this.projection)
-  features: d3.Selection<d3.BaseType, {}, SVGSVGElement, {}>
-  m0: any; o0: [number, number, number] = [0, 0, 0]; t0: [number, number]; scaleFactor = 1
-  map:  SvgSelction
-  lines: PathSelction
-  width: number
-  height: number
-  rotateTimer?: number
-  
-  ocean3D: CicleSelction
-  ocean2D: RectSelction
-  showChina = false
-  showUS = false
-  china?: PathSelction
-  us?: PathSelction
-  cities: any
 
-  threeD: boolean = true
+  canvas: d3.Selection<HTMLCanvasElement, {}, HTMLElement, any>;
+  tooltip: d3.Selection<HTMLSpanElement, {}, HTMLElement, any>;
+  airlineNumElement: d3.Selection<HTMLSpanElement, {}, HTMLElement, any>;
+  context: CanvasRenderingContext2D;
+  zoomer = d3.zoom();
 
-  constructor(props: Props) {
-    super(props)
-    this.width = this.props.width
-    this.height = this.props.height
+  width: number; height: number;
+
+  threeDi = true;
+
+  // ms to wait after dragging before auto-rotating
+  rotationDelay = 3 * 1000;
+  rotating = true;
+  allowRotate = true;
+  // auto-rotation speed
+  degPerSec = 1; degPerMs = this.degPerSec / 1000;
+  showChina: boolean = false; showUsa: boolean = false;
+  // the value of scale factor when to show/hide the country details
+  detailFactor = 2.5;
+  // the value of scale factor when to start/end the rotating
+  stopRotatingFactor = 1.5;
+
+  // The country or the city which is chosen now
+  currentArea: any;
+  // The city chosen
+  cityChosen: any;
+  // The second city chosen
+  secondCityChosen: any;
+
+  
+  r0: Pos;     // rotate angle
+  t0: Pos;     // translate value
+
+  originScale = 400;
+  projection = d3.geoOrthographic().scale(this.originScale);
+  path = d3.geoPath(this.projection);
+
+  originPointRadius = this.path.pointRadius();
+
+  // Map geoJson data
+  countries: any[];
+  land: any;
+  usa: any[];
+  china: any[];
+
+  // Airline geoJson data
+  lines: any[];
+  points: any[];
+
+  cityDetail: CityDetail;
+  cityToCityDetail: CityToCityDetail;
+  
+  public constructor(props: Props) {
+    super(props);
+    this.state = {
+      showCityDetail: false
+    };
+
+    this.width = props.width;
+    this.height = props.height;
+
+    this.countries = props.mapGeoData.countries;
+    this.land = props.mapGeoData.land;
+    this.china = props.mapGeoData.china;
+    this.usa = props.mapGeoData.usa;
+
+    this.lines = props.airlineGeoData.lines;
+    this.points = props.airlineGeoData.points;
   }
 
-  componentDidMount = () => {
-    this.init()
-    this.drawLine()
-  }
-
-  render = () => {
+  render() {
     return (
-      <div>
-        <div id='map-container'>
-          <svg id='map' height={this.props.height} width={this.props.width}>
-            <defs>
-              <radialGradient id='ocean_fill' cx='75%' cy='75%'>
-                <stop offset='5%' stopColor='#fff'/>
-                <stop offset='100%' stopColor='#ababab'/>
-              </radialGradient>
-              <linearGradient id='line_color' x1='0%' y1='0%' x2='100%'>
-                <stop offset='0%' stopColor='#000'/>
-                <stop offset='100%' stopColor='#fff'/>
-              </linearGradient>
-              <filter id='Line_blur'>
-                <feGaussianBlur result='blurout' in='SourceGraphic' dx='20' dy='20'/>
-                <feBlend in='SourceGraphic' in2='blurout' mode='normal' />
-              </filter>
-            </defs>
-          </svg>
+      <div id='globe'>
+        <canvas id='backgroundCanvas'/>
+        <canvas id='canvas'/>
+        <CityDetail airlines={this.lines} ref={(r) => this.cityDetail = r!}/>
+        <CityToCityDetail airlines={this.lines} ref={(r) => this.cityToCityDetail = r!}/>
+        <div className='Container Left_top_container'>
+          <div className="Switch">
+            <input defaultChecked={true} className="Switch-checkbox" id="3DSwitch" type="checkbox"
+                   onChange={() => this.changeProjection()}/>
+            <label className="Switch-label" htmlFor="3DSwitch">
+              <span className="Switch-inner" data-on="3D" data-off="2D"/>
+              <span className="Switch-switch"/>
+            </label>
+          </div>
+          <div className="Switch">
+            <input className="Switch-checkbox" id="rotateSwitch" type="checkbox" defaultChecked={true}
+                   onChange={(e) => this.allowRotate = !this.allowRotate}/>
+            <label className="Switch-label" htmlFor="rotateSwitch">
+              <span className="Switch-inner" data-on="允许转" data-off="禁止转"/>
+              <span className="Switch-switch"/>
+            </label>
+          </div>
         </div>
-        <div className='Button-container'>
-          <button onClick={this.changeProjection}>RUN</button>
+        <div className="Container Left_bottom_container">
+          <div className="Range_container">
+            <input type="range" min={0} max={this.props.maxAirlineNum} step={10}
+                   defaultValue={this.lines.length.toString()}
+                   onChange={this.onAirlineNumChange}/>
+            <span id='airlineNum'>{this.lines.length}</span>
+          </div>
         </div>
+        <span className='tooltip' id='tooltip'>显示提示</span>
       </div>
-    );
+    )
   }
+
+  public componentDidMount(): void {
+    this.init()
+  }
+
+  public shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+    return false
+  }
+
+
+  // render the map
+  private canvasRender() {
+  
+    const context = this.context;
+    const path = this.path;
+  
+    context.clearRect(0, 0, this.width, this.height);
+
+    const sphere: any = { type: "Sphere" };
+    context.beginPath(); context.fillStyle = OCEAN_COLOR; path(sphere); context.fill();
+
+    context.beginPath();
+    context.fillStyle = LAND_COLOR;
+    path(this.land as any);
+    context.fill();
+
+    context.strokeStyle = BORDER_COLOR;
+    context.lineWidth = BORDER_WIDTH;
+    this.countries.forEach((d: any) => {
+      context.beginPath();
+      path(d);
+      context.stroke()
+    });
+
+    if (this.showChina) {
+      this.china.forEach((d, i) => {
+        context.beginPath();
+        path(d as any);
+        context.stroke()
+      })
+    }
+
+    if (this.showUsa) {
+      this.usa.forEach((d, i) => {
+        context.beginPath();
+        path(d as any);
+        context.stroke()
+      })
+    }
+
+    if (!this.currentArea) {
+      this.drawAirlines();
+      return
+    }
+
+    const type = this.currentArea.properties.type;
+    // draw it before airlines
+    if (type == 'country' || type == 'province') {
+      context.beginPath();
+      context.fillStyle = HIGHLIGHT_COLOR;
+      path(this.currentArea as any);
+      context.fill();
+
+      this.drawAirlines()
+    } else {
+      this.drawAirlines();
+
+      context.beginPath();
+      context.fillStyle = HIGHLIGHT_COLOR;
+      path(this.currentArea as any);
+      context.fill()
+    }
+  }
+  
+  
+  // render the star background
+  private backgroundRender = () => {
+    
+    // draw star
+    const starCanvas = document.createElement('canvas');
+    const starContext = starCanvas.getContext('2d')!;
+    starCanvas.width = 50;
+    starCanvas.height = 50;
+    const half = starCanvas.width / 2,
+      gradient = starContext.createRadialGradient(half, half, 0, half, half, half);
+    gradient.addColorStop(0.025, '#fff');
+    gradient.addColorStop(0.8, 'rgba(100, 149, 237, 10)');
+    gradient.addColorStop(0.9, 'rgba(30, 144, 255, 10)');
+    gradient.addColorStop(1, 'transparent');
+    starContext.fillStyle = gradient;
+    starContext.beginPath();
+    starContext.arc(half, half, half, 0, Math.PI * 2);
+    starContext.fill();
+    
+    // draw background
+    const backgroundCanvas = d3.select('#backgroundCanvas')
+      .attr('width', this.width)
+      .attr('height', this.height) as d3.Selection<HTMLCanvasElement, {}, HTMLElement, any>;
+    const backgroundContext = backgroundCanvas.node()!.getContext('2d')!;
+    
+    let starNum = 1000;
+    for (let i = 0; i < starNum; i++) {
+      const radius = Math.random() > 0.9 ? 4 + Math.random() : 2 + Math.random();
+      const x = Math.random() * this.width, y = Math.random() * this.height;
+      backgroundContext.drawImage(starCanvas as any, x, y, radius, radius);
+    }
+    
+  };
+
+  private drawAirlines = () => {
+    const context = this.context;
+    const path = this.path;
+
+    const cityChosenId = this.cityChosen ? this.cityChosen.properties.id : -1;
+    const secondChosenId = this.secondCityChosen ? this.secondCityChosen.properties.id : -1;
+    this.points.forEach(d => {
+      const id = d.properties.id;
+      context.fillStyle = this.cityChosen || this.secondCityChosen ?
+        (id == cityChosenId || id == secondChosenId ? HIGHLIGHT_POINT_COLOR : NOT_HIGHLIGHT_FLYER_COLOR) :
+        POINT_COLOR;
+      context.beginPath(); path(d); context.fill()
+    });
+
+    // need to highlight the airlines start at the 'cityChosen'
+    this.lines.forEach(d => {
+      const startCityId = d.properties.startCityId;
+      const endCityId = d.properties.endCityId;
+
+      // context.lineWidth = FLYER_WIDTH
+      context.lineWidth = FLYER_WIDTH * d.properties.size;
+
+      if (!this.cityChosen) {
+        context.strokeStyle = FLYER_COLOR;
+      } else if ((!this.secondCityChosen && cityChosenId != startCityId) ||
+        (this.secondCityChosen && (cityChosenId != startCityId || secondChosenId != endCityId ))) {
+        context.strokeStyle = NOT_HIGHLIGHT_FLYER_COLOR;
+      } else {
+        context.strokeStyle = HIGHLIGHT_FLYER_COLOR;
+        context.lineWidth = 2
+      }
+
+      context.beginPath(); path(d); context.stroke()
+    });
+
+    // draw the ball on airlines
+    this.path.pointRadius(2);
+    context.save();
+    this.lines.forEach(d => {
+      const startCityId = d.properties.startCityId;
+      const endCityId = d.properties.endCityId;
+      if (!this.cityChosen && !this.secondCityChosen) {
+        context.fillStyle = FLYER_COLOR;
+      } else if ((!this.secondCityChosen && cityChosenId != startCityId) ||
+        (this.secondCityChosen && (cityChosenId != startCityId || secondChosenId != endCityId ))) {
+        context.fillStyle = NOT_HIGHLIGHT_FLYER_COLOR;
+      } else {
+        context.fillStyle = HIGHLIGHT_FLYER_COLOR;
+      }
+
+      const coors = d.geometry.coordinates;
+      const geoInterpolator = d3.geoInterpolate(coors[0], coors[1]);
+      let p = d.properties.ballp;
+      let dis = d.properties.distance;
+
+      context.beginPath();
+      path({type: 'Feature',
+        geometry: {type: 'Point', coordinates: geoInterpolator(p)}} as any);
+      context.fill();
+
+      p = p + 0.002 / dis;
+      p = p > 1 ? p - 1 : p;
+      d.properties.ballp = p
+    });
+    context.restore();
+    this.path.pointRadius(this.originPointRadius as number)
+  };
 
   private init = () => {
-    d3.select(window)
-    .on('mousemove', this.mousemove)
-    .on('mouseup', this.mouseup)
-    .on('mousewheel', this.mousewheel)
-    .on('keyup', this.keyUp)
-    
-    this.projection.translate([this.width / 2, this.height / 2])
+    // init canvas
+    this.canvas = d3.select('#canvas')
+      .attr('width', this.width)
+      .attr('height', this.height) as d3.Selection<HTMLCanvasElement, {}, HTMLElement, any>;
 
-    this.map = (d3.select('#map') as SvgSelction)
-    .attr('width', this.width)
-    .attr('height', this.height)
-    .on('mousedown', this.mousedown)
+    // init tooltip
+    this.tooltip = d3.select('#tooltip');
+    // init airlineNumElement
+    this.airlineNumElement = d3.select('#airlineNum');
 
-    this.initOcean()
 
-    this.map.append('path')
-    this.features = this.map.append('g')
-      .attr('class', 'World')
-      .selectAll('.map_path')
-      .data(wordJson.features)
-      .enter()
-      .append('path')
-      .attr('d', d => {
-        return this.path(d as any)
-      })
-      .attr('fill', () => d3.schemeCategory10[Math.ceil(Math.random() * 10)])
-      .on('dblclick', (d) => {
-        console.log('double click')
-        if (d.properties.NAME == CHINA || d.properties.NAME == US) {
-          this.loadDetail(d.properties.NAME)
-        }
-      }, true) as any
-      
-    this.features.append('svg:title').text(d => (d as any).properties.NAME)
+    this.canvas
+      .call(d3.drag()
+        .on('start', this.dragStarted)
+        .on('drag', this.dragged)
+        .on('end', this.dragended)
+      )
+      .call(this.zoomer.on('zoom', this.zoomed))
+      .on('mousemove', this.onMouseMove)
+      .on('click', this.onClick);
 
-    this.rotate()
-    
-  }
-
-  // 海洋
-  private initOcean = () => {
-    this.ocean3D = this.map.append("circle")
-    .attr('class', 'Ocean3D')
-    .attr("cx", this.width / 2).attr("cy", this.height / 2)
-    .attr("r", this.projection.scale())
-    .style("fill", "url(#ocean_fill)");
-
-    this.ocean2D = this.map.append('rect')
-    .attr('class', 'Ocean2D')
-    .attr("fill", "url(#ocean_fill)")
-    .attr('display', 'none')
-  }
-
-  // TODO(放小取消细节)
-  // 显示国家细节
-  private loadDetail = (country: string) => {
-    console.log(country)
-    if (country == CHINA && this.showChina)
-      return
-    if (country == US && this.showUS)
-      return
-
-    var json = country == CHINA ? chinaJson : usJson
-
-    var tmp = this.map.append('g')
-      .selectAll('path')
-      .data(json.features as any)
-      .enter()
-      .append('path')
-      .attr('class', country+'-province')
-      .attr('d', this.path as any)
-      .attr('fill', 'translate')
-      .attr('stroke', 'grey')
-    
-    country == CHINA ? this.china = tmp : this.us = tmp
-    country == CHINA ? this.showChina = true : this.showUS = true
-  }
-
-  private mousedown = () => {
-    this.m0 = [event.pageX, event.pageY]
-    this.o0 = this.projection.rotate()
-    this.t0 = this.projection.translate()
-    clearInterval(this.rotateTimer)
-    this.rotateTimer = undefined
-    event.preventDefault()
-  }
-
-  private mousemove = () => {
-    if (!this.m0)
-      return
-
-    if (this.m0) {
-      console.log('move')
-      var m1 = [event.pageX, event.pageY]
-      var o1: Pos = [this.o0[0] + (m1[0] - this.m0[0]) / 6, this.o0[1] + (this.m0[1] - m1[1]) / 6];
-      var t1: Pos = [this.t0[0], this.t0[1] + (m1[1] - this.m0[1])]
-      o1[1] = this.threeD ?
-        (
-          o1[1] > 60  ? 60  :
-          o1[1] < -60 ? -60 : o1[1]
-        ) : 0
-      this.projection.rotate(o1);
-      if (!this.threeD)
-          this.projection.translate(t1)
-      this.refresh();
-    }
-  }
-
-  private keyUp = () => {
-    console.log(event)
-    if (event.ctrlKey && (event.key == 'c' || event.key == 'C')) {
-      this.changeProjection()
-    }
-  }
+    window.onresize = this.onReSize;
   
-  private mouseup = () => {
-    if (this.m0) {
-      this.mousemove();
-      this.m0 = null;
-    }
-  }
-  
-  private mousewheel = () => {
-    console.log(event)
-    this.scaleFactor = event.wheelDelta > 0 ? scaleChangeSpeed[0] : scaleChangeSpeed[1]
-    this.projection.scale(this.projection.scale() * this.scaleFactor)
-    this.refresh()
-  }
+    // init canvas context and geoPath
+    this.context = this.canvas.node()!.getContext('2d')!;
+    this.path.context(this.context);
 
-  private refresh = (animation: boolean = false) => {
-    this.features.transition().duration(animation? 1000 : 0).attr('d', this.path)
-    this.lines.transition().duration(animation? 1000 : 0)
-      .attr('d', this.path)
+    // change the center of earth
+    this.projection.translate([this.width / 2, this.height / 2]);
     
-    this.cities.transition().duration(animation? 1000 : 0)
-      .attr('d', this.path)
+    // draw background
+    this.backgroundRender();
+    
+    // this.canvasRender()
+    this.animation();
+  };
 
-    if (this.threeD) {
-      this.ocean3D.attr('r', this.projection.scale())
+  private  changeProjection = () => {
+    this.threeDi = !this.threeDi;
+    this.projection = (this.threeDi ? d3.geoOrthographic() : d3.geoMercator())
+      .translate([this.width / 2, this.height / 2])
+      .rotate([this.projection.rotate()[0], 0])
+      .scale(this.projection.scale())
+      .center(this.projection.center());
+    this.path = d3.geoPath(this.projection).context(this.context);
+  };
+
+  private zoomed = () => {
+    let transform = d3.event.transform;
+    this.projection.scale(transform.k * this.originScale);
+    let rotateDegree = this.projection.rotate()[0];
+    rotateDegree = (rotateDegree + 360) % 360;
+    if (rotateDegree > 220 && rotateDegree < 280) {
+      this.showChina = transform.k > this.detailFactor
     }
-    else {
-      var scale = this.projection.scale()
-      var trans = this.projection.translate()
-      var x = trans[0] - Math.PI * scale,
-          y = trans[1] - Math.PI * scale,
-          width = scale * Math.PI * 2,
-          height = scale * Math.PI * 2
-      this.ocean2D
-        .attr('x', x)
-        .attr('y', y)
-        .attr('width', width)
-        .attr('height', height)
+    if (rotateDegree > 70 && rotateDegree < 130) {
+      this.showUsa = transform.k > this.detailFactor
     }
-    if (this.china) {
-      this.china.attr('d', this.path)
+
+    this.rotating = this.rotating && transform.k < this.stopRotatingFactor;
+  };
+
+  private animation = () => {
+    if (this.rotating && this.allowRotate) {
+      this.rotate()
     }
-    if (this.us) {
-      console.log('move us')
-      this.us.attr('d', this.path)
-    }
-  }
+    this.canvasRender();
+    requestAnimationFrame(this.animation)
+  };
 
   private rotate = () => {
-    if (this.rotateTimer != undefined)
-      return
-    this.rotateTimer = window.setInterval(() => {
-      this.o0[0] = (this.o0[0] + 1) % 360
-      this.projection.rotate([this.o0[0], 0])
-      this.refresh()
-    }, 30)
-  }
+    const rotation = this.projection.rotate();
+    rotation[0] += this.degPerMs * 60;
+    this.projection.rotate(rotation)
+  };
 
-  private drawLine = () => {   
-    var data = this.props.flyers.map(flyer => { return {
-      type: 'Feature',
-      geometry: {type: 'LineString', coordinates: [flyer.start, flyer.end]},
-      properties: flyer.properties
-    }})
+  private stopRotation = () => this.rotating = false;
+  private startRotation = (delay: number) => setTimeout(() => this.rotating = true, delay | 0);
 
-    // 航线
-    this.lines = this.map.append('g')
-    .selectAll('path')
-    .data(data)
-    .enter()
-    .append('path')
-    .attr('class', 'flyer')
-    .attr('d', this.path as any)
-    .attr('stroke', 'url(#line_color)')
-    .attr('stroke-width', d => d.properties.size)
-    .attr('vector-effect', 'non-scaling-stroke')
-    .attr('mask', 'url(#Mask)')
-    .attr('filter', 'url(#Line_blur)')
-    .on('click', (d) => console.log(d))
+  private dragStarted = () => {
+    this.r0 = this.projection.rotate().slice(0,2) as Pos;
+    this.t0 = this.projection.translate();
 
-    var cityData = this.props.cities.map(city => { return {
-      type: 'Feature',
-      geometry: {type: 'Point', coordinates: city.position},
-      properties: city.properties
-    }})
+    this.stopRotation();
+  };
 
-    this.cities = this.map.append('g')
-    .selectAll('path')
-    .data(cityData)
-    .enter()
-    .append('path')
-    .attr('class', 'city')
-    .attr('d', this.path as any)
-    .on('click', (d) => this.highlightCity(d.properties.name))
-    
-    this.cities.append('svg:title').text((d: any) => d.properties.name)
-  }
-  
+  private dragged = () => {
+    const delta: Pos = [event.dx, event.dy];
+    const speed = 100 / this.projection.scale();
+    const r1: Pos = [this.r0[0] + delta[0] * speed, this.r0[1] - delta[1] * speed];
+    const t1: Pos = [this.t0[0], this.t0[1] + delta[1]];
+    this.projection.rotate(r1);
+    // if (!this.threeD)
+    //   this.projection.translate(t1)
+    this.canvasRender();
 
-  private changeProjection = () => {
-    this.threeD = !this.threeD
-    this.projection = (this.threeD ? d3.geoOrthographic() : d3.geoMercator())
-    .translate([this.width / 2, this.height / 2])
-    .rotate([this.projection.rotate()[0], 0])
-    .scale(this.projection.scale())
-    .center(this.projection.center())
-  
-    this.path = d3.geoPath(this.projection)
+    this.r0 = r1
+  };
 
-    if (this.threeD) {
-      this.ocean2D.transition().duration(1000).attr('display', 'none')
-      this.ocean3D.transition().duration(1000).attr('display', 'inline')
+  private dragended = () => {
+    this.startRotation(this.rotationDelay)
+  };
+
+  private onMouseMove = () => {
+    const c = this.getArea();
+    if (c && c.properties.type == 'point') {
+      this.canvas.style('cursor', 'pointer')
     } else {
-      this.ocean2D.transition().duration(1000).attr('display', 'inline')
-      this.ocean3D.transition().duration(1000).attr('display', 'none')
+      this.canvas.style('cursor', 'default')
     }
-  
-    this.refresh(true)
-  }
+    if (!c) {
+      this.currentArea = undefined;
+      this.tooltip.style('display', 'none');
+      return
+    }
+    this.currentArea = c;
+    if (c && c.properties.name == 'CTU') console.log(c)
 
-  private highlightCity = (cityName: string) => {
-    this.lines.filter((d: any) => d.properties.startCity == cityName)
-      .attr('stroke', 'red')
-    this.lines.filter((d: any) => d.properties.startCity != cityName)
-    .attr('stroke', 'url(#line_color)')
-  }
+    const pos = d3.mouse(this.canvas.node() as any);
+    this.updateTooltip(this.currentArea.properties.name, pos[1] + 10, pos[0] + 10);
+
+  };
+
+  private updateTooltip = (text: string, x: number, y: number) => {
+    this.tooltip
+      .text(text);
+
+    (this.tooltip.node() as any).style =
+      'display: block; top: ' + x + 'px; left: ' + y + 'px;';
+  };
 
 
-  // 注释的是自封装的两点连线算法，但是背面的线可会被看到
-  // private swoosh = d3.line()
-  // .x(function(d) { return d[0] })
-  // .y(function(d) { return d[1] })
-  // .curve(d3.curveCardinal.tension(0))
+  private onClick = () => {
+    let pos = this.projection.invert!(d3.mouse(this.canvas.node() as any))!;
+    const city = this.getPoint(pos);
+    if (this.cityChosen && city && this.cityChosen != city) {
+      this.secondCityChosen = city;
+      this.cityDetail.hide();
+      this.cityToCityDetail.show(this.cityChosen, this.secondCityChosen);
+    } else {
+      this.cityChosen = city;
+      this.secondCityChosen = undefined;
+      if (this.cityChosen) {
+        this.cityDetail.show(this.cityChosen);
+      } else {
+        this.cityDetail.hide();
+      }
+      this.cityToCityDetail.hide();
+    }
+  };
 
-  // private drawLine = () => {
-  //   const pos: Pos[] = [[0,0], [90, 90]]
-  //   this.lines = this.map.append("path")
-  //   .attr("class","flyer")
-  //   .attr("d", () => this.swoosh(this.getPointsForLine(pos[0], pos[1])))
-  //   .attr('stroke', 'blue')
-  //   .attr('fill', 'transparent')
-  // }
-
-  // private getPointsForLine = (p0: Pos, p1: Pos) : Pos[] => {
-  //   // get canvas coords of arc midpoint and globe center
-  //   var mid = this.projection(this.location_along_arc(p0, p1, .5))!;
-  //   // var ctr = this.projection.translate();
+  private onReSize = () => {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.canvas.attr('width', this.width)
+      .attr('height', this.height);
+    this.projection.translate([this.width/2, this.height/2]);
     
-  //   // max length of a great circle arc is π, 
-  //   // so 0.3 means longest path "flies" 20% of radius above the globe
-  //   // var scale = 1 + 0.05 * d3.geoDistance(p0, p1) / Math.PI;
-  
-  //   // mid[0] = ctr[0] + (mid[0]-ctr[0])*scale;
-  //   // mid[1] = ctr[1] + (mid[1]-ctr[1])*scale;
-    
-  //   var result = [ this.projection(p0),
-  //                  mid,
-  //                  this.projection(p1) ]
-  //   return result as Pos[];
-  // }
+    // Redraw the background
+    this.backgroundRender();
+  };
 
-  // // 线性插值得到新点
-  // private location_along_arc = (start: Pos, end: Pos, loc: number) => {
-  //   var interpolator = d3.geoInterpolate(start, end)
-  //   return interpolator(loc)
-  // }
-  
+  private onAirlineNumChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.persist();
+    const num = parseInt(e.target.value);
+    this.cityChosen = undefined;
+    this.secondCityChosen = undefined;
+
+    // update airline data
+    const newData = this.props.updateAirline(num);
+    this.lines = newData.airlineGeoData.lines;
+    this.points = newData.airlineGeoData.points;
+
+    this.airlineNumElement.text(num);
+  };
+
+
+  // get the area under the mouse
+  private getArea = () => {
+    let pos = this.projection.invert!(d3.mouse(this.canvas.node() as any))!;
+
+    // find points first
+    const point = this.getPoint(pos);
+    if (point) return point;
+
+    // find country
+    const country = this.countries.find(function(f: any) {
+      return f.geometry.coordinates.find(function(c1: any) {
+        return polygonContains(c1, pos) || c1.find(function(c2: any) {
+          return polygonContains(c2, pos)
+        })
+      })
+    });
+
+    // find province
+    const id = country ? country.id : -1;
+    if (id == CHINA_ID || id == USA_ID) {
+      const json = id == CHINA_ID ? this.china : this.usa;
+      if (id == CHINA_ID && !this.showChina)  return country;
+      if (id == USA_ID && !this.showUsa) return country;
+      else return (json as any).find(function(f: any) {
+        return f.geometry.coordinates.find(function(c1: any) {
+          return polygonContains(c1, pos)
+        })
+      })
+    }
+    return country
+  };
+
+  private getPoint = (pos: Pos) => {
+    const ACC = 500 / this.projection.scale() * 0.5;
+    return this.points.find(function(f) {
+      return Math.abs(f.geometry.coordinates[0] - pos[0]) < ACC
+       && Math.abs(f.geometry.coordinates[1] - pos[1]) < ACC
+    })
+  }
 }
 
 export default Earth
