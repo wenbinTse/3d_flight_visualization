@@ -1,18 +1,47 @@
 export interface Airline {
-  start: Pos
-  end: Pos
-  properties: {
-    size: number,
-    startCity: string,
-    endCity: string
-  } //存放航班属性
+  num: number
+  start: City
+  end: City
 }
 
 export interface City {
-  position: Pos
+  name: string
+  coordinates: Pos
+  state: string
+  countryEng: string
+  countryChi: string
+}
+
+export interface GeoLine {
+  type: string
+  geometry: {
+    type: string
+    coordinates: [Pos, Pos]
+  }
   properties: {
+    type: string
+    ballp: number
+    distance: number
+    id: number
+    startCityId: number
+    endCityId: number
+    num: number
+  }
+}
+
+export interface GeoPoint {
+  type: string
+  geometry: {
+    type: string
+    coordinates: Pos
+  }
+  properties: {
+    id: number,
+    type: string,
+    state: string,
+    countryEng: string,
+    countryChi: string,
     name: string
-    //存放城市属性
   }
 }
 

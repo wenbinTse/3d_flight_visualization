@@ -4,7 +4,7 @@ import * as usaJson from './data/us.json'
 import * as countryCodeJson from './data/country_code.json'
 
 import * as topojson from 'topojson';
-import {Airline, City} from './Interface';
+import {Airline, City, GeoLine, GeoPoint, Pos} from './Interface';
 import * as d3 from 'd3'
 
 let id = 0;
@@ -58,32 +58,38 @@ export function getMapGeoData() {
 /* use the information from the airlines to generate the geoJson data
  */
 export function getGeoJsonForAirlines(airlines: Airline[], cities: City[]) {
-  id = mapMaxId
-  const points = cities.map(city => {
-    cityToId[city.properties.name] = id;
+  id = mapMaxId;
+  const points: GeoPoint[] = cities.map(city => {
+    cityToId[city.name] = id;
     return {
       type: 'Feature',
-      geometry: {type: 'Point', coordinates: city.position},
+      geometry: {type: 'Point', coordinates: city.coordinates},
       properties: {
-        ...city.properties,
+        ...city,
         type: 'point',
         id: id++
+      }
     }
-  }});
+  });
 
-  const lines = airlines.map(airline => { return {
-    type: 'Feature',
-    geometry: {type: 'LineString', coordinates: [airline.start, airline.end]},
-    properties: {
-      ...airline.properties,
-      type: 'airline',
-      ballp: Math.random(), // the position of the ball
-      distance: d3.geoDistance(airline.start, airline.end),
-      id: id++,
-      startCityId: cityToId[airline.properties.startCity],
-      endCityId: cityToId[airline.properties.endCity]
+  const lines: GeoLine[] = airlines.map(airline => {
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [airline.start.coordinates, airline.end.coordinates] as [Pos, Pos]
+      },
+      properties: {
+        type: 'airline',
+        ballp: Math.random(), // the position of the ball
+        distance: d3.geoDistance(airline.start.coordinates, airline.end.coordinates),
+        id: id++,
+        startCityId: cityToId[airline.start.name],
+        endCityId: cityToId[airline.end.name],
+        num: airline.num
+      }
     }
-  }});
+  });
 
   return {
     lines,
@@ -93,18 +99,18 @@ export function getGeoJsonForAirlines(airlines: Airline[], cities: City[]) {
 
 
 // get the set of cities from the given airlines
-export function getCities(airlines: Airline[]) {
+export function getCities(airlines: Airline[]): City[] {
   let cities: City[] = [];
-  airlines.forEach(f => {
+  airlines.forEach(airline => {
     cities.push({
-      position: f.start,
-      properties: {name: f.properties.startCity}
+      ...airline.start
     });
     cities.push({
-      position: f.end,
-      properties: {name: f.properties.endCity}
+      ...airline.end
     })
   });
   let helper = new Map();
-  return cities.filter(c => !helper.get(c.properties.name) && helper.set(c.properties.name, 1))
+  cities = cities.filter(c => !helper.get(c.name) && helper.set(c.name, 1))
+  console.log(cities.length);
+  return cities
 }

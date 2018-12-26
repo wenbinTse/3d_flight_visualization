@@ -5,7 +5,7 @@ import './RangeInput.css'
 
 import * as d3 from 'd3'
 import {event, polygonContains} from 'd3'
-import {City, Airline, Pos} from './Interface';
+import {City, Airline, Pos, GeoPoint, GeoLine} from './Interface';
 import CityDetail from "./CityDetail";
 import CityToCityDetail from "./CityToCityDetail";
 import {ChangeEvent} from "react";
@@ -28,10 +28,10 @@ interface Props {
 
 const OCEAN_COLOR = '#696969';
 const LAND_COLOR  = '#000000';
-const FLYER_COLOR = '#ffffff';
-const HIGHLIGHT_FLYER_COLOR = '#0a0';
-const NOT_HIGHLIGHT_FLYER_COLOR = '#555';
-const FLYER_WIDTH = 0.6;
+const AIRLINE_COLOR = '#ffffff';
+const HIGHLIGHT_AIRLINE_COLOR = '#0a0';
+const NOT_HIGHLIGHT_AIRLINE_COLOR = '#555';
+const AIRLINE_WIDTH = 0.6;
 const BORDER_WIDTH = 0.2;
 const BORDER_COLOR = '#dcdcdc';
 const HIGHLIGHT_COLOR = '#a00';
@@ -69,9 +69,9 @@ class Earth extends React.Component<Props, {}> {
   // The country or the city which is chosen now
   currentArea: any;
   // The city chosen
-  cityChosen: any;
+  cityChosen?: GeoPoint;
   // The second city chosen
-  secondCityChosen: any;
+  secondCityChosen?: GeoPoint;
 
   
   r0: Pos;     // rotate angle
@@ -90,8 +90,8 @@ class Earth extends React.Component<Props, {}> {
   china: any[];
 
   // Airline geoJson data
-  lines: any[];
-  points: any[];
+  lines: GeoLine[];
+  points: GeoPoint[];
 
   cityDetail: CityDetail;
   cityToCityDetail: CityToCityDetail;
@@ -132,7 +132,7 @@ class Earth extends React.Component<Props, {}> {
           </div>
           <div className="Switch">
             <input className="Switch-checkbox" id="rotateSwitch" type="checkbox" defaultChecked={true}
-                   onChange={(e) => this.allowRotate = !this.allowRotate}/>
+                   onChange={() => this.allowRotate = !this.allowRotate}/>
             <label className="Switch-label" htmlFor="rotateSwitch">
               <span className="Switch-inner" data-on="允许转" data-off="禁止转"/>
               <span className="Switch-switch"/>
@@ -266,33 +266,26 @@ class Earth extends React.Component<Props, {}> {
 
     const cityChosenId = this.cityChosen ? this.cityChosen.properties.id : -1;
     const secondChosenId = this.secondCityChosen ? this.secondCityChosen.properties.id : -1;
-    this.points.forEach(d => {
-      const id = d.properties.id;
-      context.fillStyle = this.cityChosen || this.secondCityChosen ?
-        (id == cityChosenId || id == secondChosenId ? HIGHLIGHT_POINT_COLOR : NOT_HIGHLIGHT_FLYER_COLOR) :
-        POINT_COLOR;
-      context.beginPath(); path(d); context.fill()
-    });
 
     // need to highlight the airlines start at the 'cityChosen'
     this.lines.forEach(d => {
       const startCityId = d.properties.startCityId;
       const endCityId = d.properties.endCityId;
 
-      // context.lineWidth = FLYER_WIDTH
-      context.lineWidth = FLYER_WIDTH * d.properties.size;
+      // context.lineWidth = AIRLINE_WIDTH
+      context.lineWidth = AIRLINE_WIDTH * d.properties.num;
 
       if (!this.cityChosen) {
-        context.strokeStyle = FLYER_COLOR;
+        context.strokeStyle = AIRLINE_COLOR;
       } else if ((!this.secondCityChosen && cityChosenId != startCityId) ||
         (this.secondCityChosen && (cityChosenId != startCityId || secondChosenId != endCityId ))) {
-        context.strokeStyle = NOT_HIGHLIGHT_FLYER_COLOR;
+        context.strokeStyle = NOT_HIGHLIGHT_AIRLINE_COLOR;
       } else {
-        context.strokeStyle = HIGHLIGHT_FLYER_COLOR;
+        context.strokeStyle = HIGHLIGHT_AIRLINE_COLOR;
         context.lineWidth = 2
       }
 
-      context.beginPath(); path(d); context.stroke()
+      context.beginPath(); path(d as any); context.stroke()
     });
 
     // draw the ball on airlines
@@ -302,12 +295,12 @@ class Earth extends React.Component<Props, {}> {
       const startCityId = d.properties.startCityId;
       const endCityId = d.properties.endCityId;
       if (!this.cityChosen && !this.secondCityChosen) {
-        context.fillStyle = FLYER_COLOR;
+        context.fillStyle = AIRLINE_COLOR;
       } else if ((!this.secondCityChosen && cityChosenId != startCityId) ||
         (this.secondCityChosen && (cityChosenId != startCityId || secondChosenId != endCityId ))) {
-        context.fillStyle = NOT_HIGHLIGHT_FLYER_COLOR;
+        context.fillStyle = NOT_HIGHLIGHT_AIRLINE_COLOR;
       } else {
-        context.fillStyle = HIGHLIGHT_FLYER_COLOR;
+        context.fillStyle = HIGHLIGHT_AIRLINE_COLOR;
       }
 
       const coors = d.geometry.coordinates;
@@ -324,8 +317,17 @@ class Earth extends React.Component<Props, {}> {
       p = p > 1 ? p - 1 : p;
       d.properties.ballp = p
     });
-    context.restore();
+  
     this.path.pointRadius(this.originPointRadius as number)
+    this.points.forEach(d => {
+      const id = d.properties.id;
+      context.fillStyle = this.cityChosen || this.secondCityChosen ?
+        (id == cityChosenId || id == secondChosenId ? HIGHLIGHT_POINT_COLOR : NOT_HIGHLIGHT_AIRLINE_COLOR) :
+        POINT_COLOR;
+      context.beginPath(); path(d as any); context.fill()
+    });
+    
+    context.restore();
   };
 
   private init = () => {
@@ -366,7 +368,7 @@ class Earth extends React.Component<Props, {}> {
     this.animation();
   };
 
-  private  changeProjection = () => {
+  private changeProjection = () => {
     this.threeDi = !this.threeDi;
     this.projection = (this.threeDi ? d3.geoOrthographic() : d3.geoMercator())
       .translate([this.width / 2, this.height / 2])
