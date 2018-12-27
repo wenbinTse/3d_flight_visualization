@@ -6,7 +6,7 @@ import './RangeInput.css'
 import * as wholeAirLines from './data/airlines_list_clustered_by_city.json'
 
 import * as d3 from 'd3'
-import {event, GeoPath, polygonContains} from 'd3'
+import {event, geoDistance, GeoPath, polygonContains} from 'd3'
 import {City, Airline, Pos, GeoPoint, GeoLine} from './Interface';
 import CityDetail from "./CityDetail";
 import CityToCityDetail from "./CityToCityDetail";
@@ -34,6 +34,7 @@ const LAND_COLOR  = '#000000';
 const AIRLINE_COLOR = '#ffffff';
 const HIGHLIGHT_AIRLINE_COLOR = '#0a0';
 const NOT_HIGHLIGHT_AIRLINE_COLOR = '#555';
+const TRANSPARENT_AIRLINE_COLOR = 'rgba(5, 5, 5, 0.2)';
 const AIRLINE_WIDTH = 0.6;
 const BORDER_WIDTH = 0.2;
 const BORDER_COLOR = '#dcdcdc';
@@ -67,7 +68,7 @@ class Earth extends React.Component<Props, {}> {
   // the value of scale factor when to show/hide the country details
   detailFactor = 2.5;
   // the value of scale factor when to start/end the rotating
-  stopRotatingFactor = 1.5;
+  stopRotatingFactor = 1.5 * 400;
 
   // The country or the city which is chosen now
   currentArea: any;
@@ -135,7 +136,11 @@ class Earth extends React.Component<Props, {}> {
           </div>
           <div className="Switch">
             <input className="Switch-checkbox" id="rotateSwitch" type="checkbox" defaultChecked={true}
-                   onChange={() => this.allowRotate = !this.allowRotate}/>
+                   onChange={(e) => {
+                     e.persist();
+                     this.allowRotate = e.target.checked
+                   }
+                   }/>
             <label className="Switch-label" htmlFor="rotateSwitch">
               <span className="Switch-inner" data-on="允许转" data-off="禁止转"/>
               <span className="Switch-switch"/>
@@ -223,6 +228,7 @@ class Earth extends React.Component<Props, {}> {
 
       context.beginPath();
       context.fillStyle = HIGHLIGHT_COLOR;
+      path.pointRadius(this.originPointRadius as number);
       path(this.currentArea as any);
       context.fill()
     }
@@ -277,7 +283,12 @@ class Earth extends React.Component<Props, {}> {
       context.beginPath(); path(d as any); context.fill()
     });
     
-    context.strokeStyle = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR : AIRLINE_COLOR;
+    const scale = this.projection.scale();
+    const attention = scale > 1000;
+    const center = this.getCenter();
+    
+    const defaultColor = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR : AIRLINE_COLOR;
+    context.strokeStyle = defaultColor;
     this.lines.forEach(d => {
       const startCityId = d.properties.startCityId;
       const endCityId = d.properties.endCityId;
@@ -290,6 +301,10 @@ class Earth extends React.Component<Props, {}> {
       // choose one city
       if (this.cityChosen && !this.secondCityChosen && cityChosenId == startCityId)
         return;
+      
+      if (attention && geoDistance(center, d.geometry.coordinates[0]) > 400 / scale) {
+        context.strokeStyle = TRANSPARENT_AIRLINE_COLOR;
+      } else context.strokeStyle = defaultColor;
   
       // context.lineWidth = AIRLINE_WIDTH
       context.lineWidth = AIRLINE_WIDTH * d.properties.num;
@@ -411,7 +426,8 @@ class Earth extends React.Component<Props, {}> {
 
   private zoomed = () => {
     let transform = d3.event.transform;
-    this.projection.scale(transform.k * this.originScale);
+    const newScale = transform.k * this.originScale;
+    this.projection.scale(newScale);
     let rotateDegree = this.projection.rotate()[0];
     rotateDegree = (rotateDegree + 360) % 360;
     if (rotateDegree > 220 && rotateDegree < 280) {
@@ -421,7 +437,8 @@ class Earth extends React.Component<Props, {}> {
       this.showUsa = transform.k > this.detailFactor
     }
 
-    this.rotating = this.rotating && transform.k < this.stopRotatingFactor;
+    this.allowRotate = this.allowRotate && newScale < this.stopRotatingFactor;
+    console.log(this.projection.scale(), this.getCenter())
   };
 
   private animation = () => {
@@ -446,6 +463,14 @@ class Earth extends React.Component<Props, {}> {
     this.t0 = this.projection.translate();
 
     this.stopRotation();
+  };
+  
+  private getCenter = () => {
+    const rotate = this.projection.rotate();
+    const r0 = rotate[0], r1 = rotate[1];
+    let r = (-r1 + 360) % 360;
+    r = r < 90 ? r : (r < 270 ? 180 - r : r - 360);
+    return [(-r0 + 360 + 180) % 360 - 180, r] as [number, number];
   };
 
   private dragged = () => {
@@ -514,6 +539,9 @@ class Earth extends React.Component<Props, {}> {
         const airlines = wholeAirLines.filter(l => l.start.name == (this.cityChosen!).properties.name) as Airline[];
         this.highLightAirlines = airlines.map(l => getGeoJsonForAirline(l));
         this.highLightPoints = [city!]
+        
+        console.log(geoDistance(this.getCenter(), this.cityChosen.geometry.coordinates), 400 / this.projection.scale())
+        
       } else {
         this.highLightAirlines = [];
         this.highLightPoints = [];

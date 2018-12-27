@@ -17,15 +17,21 @@ class CityToCityDetail extends React.Component<{}, {}> {
     const data = {name: this.startCityName, children: []};
     const children = data.children as any[];
   
+    const svg = d3.select('#citys_detail_svg');
+    svg.selectAll('*').remove();
+    const container = d3.select('#citys_detail_container');
+    container.style('display', 'flex')
+      .on('mouseleave', this.onMouseLeave);
+  
     const block = wholeAirLinesDict[this.startCityName]['end'][this.endCityName];
     if (!block) {
       d3.select('#citys_detail_help')
         .html(`暂时没有从${this.startCityName}到${this.endCityName}的航班`);
       d3.select('#citys_detail_whole_num')
         .html('');
-      d3.select('#city_detail_help1')
+      d3.select('#citys_detail_help1')
         .html('');
-      d3.select('#city_detail_num')
+      d3.select('#citys_detail_num')
         .text('');
       return;
     }
@@ -51,13 +57,6 @@ class CityToCityDetail extends React.Component<{}, {}> {
         children: dict[start].children
       })
     }
-  
-    const container = d3.select('#citys_detail_container');
-    container.style('display', 'flex')
-      .on('mouseleave', this.onMouseLeave);
-    
-    const svg = d3.select('#citys_detail_svg');
-    svg.selectAll('*').remove();
     
     this.renderChart(data);
   
