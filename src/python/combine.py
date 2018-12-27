@@ -18,7 +18,7 @@ def combine(international=True):
 
   airports_format = {}
   for x in json_airports:
-    airports_format[x['iata']] = {
+    airports_format[x['icao']] = {
       'coordinates': x['coordinates'],
       'name': x['name'],
       'city': x['city'],
@@ -29,11 +29,14 @@ def combine(international=True):
     
   data = []
   for x in json_arlines:
-    origin, destin, num = x['direction']['origin']['iata'], x['direction']['destination']['iata'], x['num']
+    origin, destin, num = x['direction']['origin']['icao'], x['direction']['destination']['icao'], x['num']
 
     if origin in airports_format and destin in airports_format:
   
       if international and airports_format[origin]['countryEng'] == airports_format[destin]['countryEng']:
+        continue
+
+      if airports_format[origin]['city'] == '' or airports_format[destin]['city'] == '':
         continue
 
       data.append({
