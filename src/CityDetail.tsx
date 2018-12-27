@@ -81,7 +81,7 @@ class CityDetail extends React.Component<{}, {}>{
     const width = (svg.node() as any).clientWidth;
     const height = (svg.node() as any).clientHeight;
     const radius = Math.min(width, height) / 2;
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    const color = d3.scaleOrdinal(d3.schemeSet3);
   
     // Create primary <g> element
     const g = d3.select('#city_detail_svg')

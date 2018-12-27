@@ -29,17 +29,17 @@ interface Props {
   }
 }
 
-const OCEAN_COLOR = '#696969';
+const OCEAN_COLOR = '#708090';
 const LAND_COLOR  = '#000000';
 const AIRLINE_COLOR = '#ffffff';
-const HIGHLIGHT_AIRLINE_COLOR = '#0a0';
+const HIGHLIGHT_AIRLINE_COLOR = '#61ca90';
 const NOT_HIGHLIGHT_AIRLINE_COLOR = '#555';
 const TRANSPARENT_AIRLINE_COLOR = 'rgba(5, 5, 5, 0.2)';
 const AIRLINE_WIDTH = 0.6;
 const BORDER_WIDTH = 0.2;
 const BORDER_COLOR = '#dcdcdc';
-const HIGHLIGHT_COLOR = '#a00';
-const POINT_COLOR = '#0a0';
+const HIGHLIGHT_COLOR = '#470024';
+const POINT_COLOR = '#86cd9f';
 const HIGHLIGHT_POINT_COLOR = '#FFFF00';
 const NOT_HIGHLIGHT_POINT_COLOR = '#333';
 
