@@ -57,6 +57,7 @@ class Earth extends React.Component<Props, {}> {
   width: number; height: number;
 
   threeDi = true;
+  useAttention = true; // 当地球较大时，降低/维持起点不在当前视窗内的航线的对比度
 
   // ms to wait after dragging before auto-rotating
   rotationDelay = 3 * 1000;
@@ -127,7 +128,7 @@ class Earth extends React.Component<Props, {}> {
         <CityDetail ref={(r) => this.cityDetail = r!}/>
         <CityToCityDetail ref={(r) => this.cityToCityDetail = r!}/>
         <div className='Container Left_top_container'>
-          <div className="Switch">
+          <div className="Switch" title={"3D/2D切换"}>
             <input defaultChecked={true} className="Switch-checkbox" id="3DSwitch" type="checkbox"
                    onChange={() => this.changeProjection()}/>
             <label className="Switch-label" htmlFor="3DSwitch">
@@ -135,7 +136,7 @@ class Earth extends React.Component<Props, {}> {
               <span className="Switch-switch"/>
             </label>
           </div>
-          <div className="Switch">
+          <div className="Switch" title="允许/禁止地球旋转">
             <input className="Switch-checkbox" id="rotateSwitch" type="checkbox" defaultChecked={true}
                    onChange={(e) => {
                      e.persist();
@@ -144,6 +145,14 @@ class Earth extends React.Component<Props, {}> {
                    }/>
             <label className="Switch-label" htmlFor="rotateSwitch">
               <span className="Switch-inner" data-on="允许转" data-off="禁止转"/>
+              <span className="Switch-switch"/>
+            </label>
+          </div>
+          <div className="Switch" title={"当地球较大时，降低/维持起点不在当前视窗内的航线的对比度"}>
+            <input defaultChecked={true} className="Switch-checkbox" id="useAttention" type="checkbox"
+            onChange={() => this.useAttention = !this.useAttention}/>
+            <label className="Switch-label" htmlFor="useAttention">
+              <span className="Switch-inner" data-on="低对比" data-off="原对比"/>
               <span className="Switch-switch"/>
             </label>
           </div>
@@ -285,11 +294,14 @@ class Earth extends React.Component<Props, {}> {
     });
     
     const scale = this.projection.scale();
-    const attention = scale > 1000;
+    const attention = this.useAttention && scale > 1000;
     const center = this.getCenter();
     
-    const defaultColor = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR : AIRLINE_COLOR;
-    context.strokeStyle = defaultColor;
+    const defaultStrokeColor = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR : AIRLINE_COLOR;
+    context.strokeStyle = defaultStrokeColor;
+    const defaultFillColor = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR :AIRLINE_COLOR;
+    context.fillStyle = defaultFillColor;
+    path.pointRadius(2);
     this.lines.forEach(d => {
       const startCityId = d.properties.startCityId;
       const endCityId = d.properties.endCityId;
@@ -305,33 +317,17 @@ class Earth extends React.Component<Props, {}> {
       
       if (attention && geoDistance(center, d.geometry.coordinates[0]) > 300 / scale) {
         context.strokeStyle = TRANSPARENT_AIRLINE_COLOR;
-      } else context.strokeStyle = defaultColor;
+        context.fillStyle = TRANSPARENT_AIRLINE_COLOR;
+      } else {
+        context.strokeStyle = defaultStrokeColor;
+        context.fillStyle = defaultFillColor;
+      }
   
       // context.lineWidth = AIRLINE_WIDTH
       context.lineWidth = AIRLINE_WIDTH * d.properties.num;
       context.beginPath(); path(d as any); context.stroke();
-    });
-
-    // draw the ball on the airline
-    context.fillStyle = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR :AIRLINE_COLOR;
-    path.pointRadius(2);
-    this.lines.forEach(d => {
-      const startCityId = d.properties.startCityId;
-      const endCityId = d.properties.endCityId;
-    
-      // choose two cities
-      if (this.cityChosen && this.secondCityChosen && cityChosenId == startCityId &&
-        secondChosenId == endCityId) {
-        return;
-      }
-  
-      // choose one city
-      if (this.cityChosen && !this.secondCityChosen && cityChosenId == startCityId)
-        return;
-      
       this.drawBall(d, context, path);
     });
-    
     context.restore();
     this.highLight();
   };
@@ -438,7 +434,7 @@ class Earth extends React.Component<Props, {}> {
       this.showUsa = transform.k > this.detailFactor
     }
 
-    this.rotating = this.rotating && newScale < this.stopRotatingFactor;
+    this.rotating = newScale < this.stopRotatingFactor;
     console.log(this.projection.scale(), this.getCenter())
   };
 

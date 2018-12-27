@@ -10,6 +10,7 @@ class CityDetail extends React.Component<{}, {}>{
   group: d3.Selection<SVGGElement, {}, HTMLElement, any>;
   
   public show = (city: GeoPoint) => {
+    this.clear();
     this.cityName = city.properties.name;
     
     const data = {name: this.cityName, children: []};
@@ -25,9 +26,6 @@ class CityDetail extends React.Component<{}, {}>{
     const container = d3.select('#city_detail_container');
     container.style('display', 'flex');
     
-    const svg = d3.select('#city_detail_svg');
-    svg.selectAll('*').remove();
-    
     this.renderChart(data);
     
     d3.select('#city_detail_svg')
@@ -42,7 +40,21 @@ class CityDetail extends React.Component<{}, {}>{
 
   public hide = () => {
     d3.select('#city_detail_container')
-      .style('display', 'none')
+      .style('display', 'none');
+  };
+  
+  private clear = () => {
+    d3.select('#city_detail_help')
+      .html('');
+    d3.select('#city_detail_whole_num')
+      .html('');
+    d3.select('#city_detail_help1')
+      .html('');
+    d3.select('#city_detail_num')
+      .text('');
+  
+    const svg = d3.select('#city_detail_svg');
+    svg.selectAll('*').remove();
   };
 
   render() {

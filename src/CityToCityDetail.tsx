@@ -11,14 +11,13 @@ class CityToCityDetail extends React.Component<{}, {}> {
   group: d3.Selection<SVGGElement, {}, HTMLElement, any>;
   
   public show = (startCity: GeoPoint, endCity: GeoPoint) => {
+    this.clear();
     this.startCityName = startCity.properties.name;
     this.endCityName = endCity.properties.name;
   
     const data = {name: this.startCityName, children: []};
     const children = data.children as any[];
-  
-    const svg = d3.select('#citys_detail_svg');
-    svg.selectAll('*').remove();
+    
     const container = d3.select('#citys_detail_container');
     container.style('display', 'flex')
       .on('mouseleave', this.onMouseLeave);
@@ -69,7 +68,21 @@ class CityToCityDetail extends React.Component<{}, {}> {
 
   public hide = () => {
     d3.select('#citys_detail_container')
-      .style('display', 'none')
+      .style('display', 'none');
+  };
+  
+  private clear = () => {
+    d3.select('#citys_detail_help')
+      .html('');
+    d3.select('#citys_detail_whole_num')
+      .html('');
+    d3.select('#citys_detail_help1')
+      .html('');
+    d3.select('#citys_detail_num')
+      .text('');
+  
+    const svg = d3.select('#citys_detail_svg');
+    svg.selectAll('*').remove();
   };
 
   render() {
