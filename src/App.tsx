@@ -28,6 +28,7 @@ class App extends React.Component {
 
 
   public render() {
+    console.log(this.airlineGeoData.lines)
     const width = window.innerWidth, height = window.innerHeight;
     console.log(data)
     return (

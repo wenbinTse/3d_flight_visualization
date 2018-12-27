@@ -31,11 +31,21 @@ for index, airline in enumerate(airlines):
             'countryChi': properties['startAirport']['countryChi']
         }
 
+    if end_city not in airlines_city_dict:
+        airlines_city_dict[end_city] = {
+            'num': 0,
+            'end': {},
+            'coordinates': airline['end'],
+            'state': properties['endAirport']['state'],
+            'countryEng': properties['endAirport']['countryEng'],
+            'countryChi': properties['endAirport']['countryChi']
+        }
+
     if end_city not in airlines_city_dict[start_city]['end']:
         airlines_city_dict[start_city]['end'][end_city] = {
             'num': 0,
             'list': [],
-            'coordinates': airline['end'],
+            'coordinates': airlines_city_dict[end_city]['coordinates'],
             'state': properties['endAirport']['state'],
             'countryEng': properties['endAirport']['countryEng'],
             'countryChi': properties['endAirport']['countryChi']
@@ -82,6 +92,6 @@ with open(airlines_list_city_file, 'w', encoding='utf8') as f:
     json.dump(airlines_city_list, f, ensure_ascii=False, indent=4)
     print('saved to {}'.format(airlines_list_city_file))
 
-print('开始城市数：{}'.format(len(airlines_city_dict)))
+print('城市数：{}'.format(len(airlines_city_dict)))
 print('聚类前航班数: {}'.format(len(airlines)))
 print('聚类后航班数: {}'.format(len(airlines_city_list)))

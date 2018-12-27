@@ -3,12 +3,15 @@ import './App.css';
 import './Switch.css'
 import './RangeInput.css'
 
+import * as wholeAirLines from './data/airlines_list_clustered_by_city.json'
+
 import * as d3 from 'd3'
-import {event, polygonContains} from 'd3'
+import {event, GeoPath, polygonContains} from 'd3'
 import {City, Airline, Pos, GeoPoint, GeoLine} from './Interface';
 import CityDetail from "./CityDetail";
 import CityToCityDetail from "./CityToCityDetail";
 import {ChangeEvent} from "react";
+import {getGeoJsonForAirline, getGeoJsonForCity} from "./Util";
 
 interface Props {
   // interface
@@ -16,13 +19,13 @@ interface Props {
   height: number
   airlines: Airline[]
   cities: City[]
-  airlineGeoData: {lines: any[], points: any[]}
+  airlineGeoData: {lines: GeoLine[], points: GeoPoint[]}
   mapGeoData: {countries: any[], land: any, usa: any[], china: any[]}
   maxAirlineNum: number
   updateAirline: (num: number) => {
     airlines: Airline[],
     cities: City[],
-    airlineGeoData: {lines: any[], points: any[]}
+    airlineGeoData: {lines: GeoLine[], points: GeoPoint[]}
   }
 }
 
@@ -119,8 +122,8 @@ class Earth extends React.Component<Props, {}> {
       <div id='globe'>
         <canvas id='backgroundCanvas'/>
         <canvas id='canvas'/>
-        <CityDetail airlines={this.lines} ref={(r) => this.cityDetail = r!}/>
-        <CityToCityDetail airlines={this.lines} ref={(r) => this.cityToCityDetail = r!}/>
+        <CityDetail ref={(r) => this.cityDetail = r!}/>
+        <CityToCityDetail ref={(r) => this.cityToCityDetail = r!}/>
         <div className='Container Left_top_container'>
           <div className="Switch">
             <input defaultChecked={true} className="Switch-checkbox" id="3DSwitch" type="checkbox"
@@ -266,68 +269,96 @@ class Earth extends React.Component<Props, {}> {
 
     const cityChosenId = this.cityChosen ? this.cityChosen.properties.id : -1;
     const secondChosenId = this.secondCityChosen ? this.secondCityChosen.properties.id : -1;
-
-    // need to highlight the airlines start at the 'cityChosen'
-    this.lines.forEach(d => {
-      const startCityId = d.properties.startCityId;
-      const endCityId = d.properties.endCityId;
-
-      // context.lineWidth = AIRLINE_WIDTH
-      context.lineWidth = AIRLINE_WIDTH * d.properties.num;
-
-      if (!this.cityChosen) {
-        context.strokeStyle = AIRLINE_COLOR;
-      } else if ((!this.secondCityChosen && cityChosenId != startCityId) ||
-        (this.secondCityChosen && (cityChosenId != startCityId || secondChosenId != endCityId ))) {
-        context.strokeStyle = NOT_HIGHLIGHT_AIRLINE_COLOR;
-      } else {
-        context.strokeStyle = HIGHLIGHT_AIRLINE_COLOR;
-        context.lineWidth = 2
-      }
-
-      context.beginPath(); path(d as any); context.stroke()
-    });
-
-    // draw the ball on airlines
-    this.path.pointRadius(2);
-    context.save();
-    this.lines.forEach(d => {
-      const startCityId = d.properties.startCityId;
-      const endCityId = d.properties.endCityId;
-      if (!this.cityChosen && !this.secondCityChosen) {
-        context.fillStyle = AIRLINE_COLOR;
-      } else if ((!this.secondCityChosen && cityChosenId != startCityId) ||
-        (this.secondCityChosen && (cityChosenId != startCityId || secondChosenId != endCityId ))) {
-        context.fillStyle = NOT_HIGHLIGHT_AIRLINE_COLOR;
-      } else {
-        context.fillStyle = HIGHLIGHT_AIRLINE_COLOR;
-      }
-
-      const coors = d.geometry.coordinates;
-      const geoInterpolator = d3.geoInterpolate(coors[0], coors[1]);
-      let p = d.properties.ballp;
-      let dis = d.properties.distance;
-
-      context.beginPath();
-      path({type: 'Feature',
-        geometry: {type: 'Point', coordinates: geoInterpolator(p)}} as any);
-      context.fill();
-
-      p = p + 0.002 / dis;
-      p = p > 1 ? p - 1 : p;
-      d.properties.ballp = p
-    });
   
-    this.path.pointRadius(this.originPointRadius as number)
+    // draw cities
+    this.path.pointRadius(this.originPointRadius as number);
+    context.fillStyle = this.cityChosen? NOT_HIGHLIGHT_POINT_COLOR : POINT_COLOR;
     this.points.forEach(d => {
-      const id = d.properties.id;
-      context.fillStyle = this.cityChosen || this.secondCityChosen ?
-        (id == cityChosenId || id == secondChosenId ? HIGHLIGHT_POINT_COLOR : NOT_HIGHLIGHT_AIRLINE_COLOR) :
-        POINT_COLOR;
       context.beginPath(); path(d as any); context.fill()
     });
     
+    context.strokeStyle = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR : AIRLINE_COLOR;
+    this.lines.forEach(d => {
+      const startCityId = d.properties.startCityId;
+      const endCityId = d.properties.endCityId;
+  
+      // choose two cities
+      if (this.cityChosen && this.secondCityChosen && cityChosenId == startCityId &&
+        secondChosenId == endCityId)
+        return;
+  
+      // choose one city
+      if (this.cityChosen && !this.secondCityChosen && cityChosenId == startCityId)
+        return;
+  
+      // context.lineWidth = AIRLINE_WIDTH
+      context.lineWidth = AIRLINE_WIDTH * d.properties.num;
+      context.beginPath(); path(d as any); context.stroke();
+    });
+
+    // draw the ball on the airline
+    context.fillStyle = this.cityChosen ? NOT_HIGHLIGHT_AIRLINE_COLOR :AIRLINE_COLOR;
+    path.pointRadius(2);
+    this.lines.forEach(d => {
+      const startCityId = d.properties.startCityId;
+      const endCityId = d.properties.endCityId;
+    
+      // choose two cities
+      if (this.cityChosen && this.secondCityChosen && cityChosenId == startCityId &&
+        secondChosenId == endCityId) {
+        return;
+      }
+  
+      // choose one city
+      if (this.cityChosen && !this.secondCityChosen && cityChosenId == startCityId)
+        return;
+      
+      this.drawBall(d, context, path);
+    });
+    
     context.restore();
+    this.highLight();
+  };
+  
+  private drawBall = (airline: GeoLine, context: CanvasRenderingContext2D, path: GeoPath) => {
+    const coors = airline.geometry.coordinates;
+    const geoInterpolator = d3.geoInterpolate(coors[0], coors[1]);
+    let p = airline.properties.ballp;
+    let dis = airline.properties.distance;
+  
+    context.beginPath();
+    path({type: 'Feature',
+      geometry: {type: 'Point', coordinates: geoInterpolator(p)}} as any);
+    context.fill();
+  
+    p = p + 0.002 / dis;
+    p = p > 1 ? p - 1 : p;
+    airline.properties.ballp = p
+  };
+  
+  // highlight the airlines and cities chosen
+  highLightPoints: GeoPoint[] = [];
+  highLightAirlines: GeoLine[] = [];
+  private highLight = () => {
+    const context = this.context;
+    const path = this.path;
+    
+    context.strokeStyle = HIGHLIGHT_AIRLINE_COLOR;
+    for (const airline of this.highLightAirlines) {
+      context.beginPath(); path(airline as any); context.stroke();
+    }
+    
+    context.fillStyle = HIGHLIGHT_POINT_COLOR;
+    path.pointRadius(this.originPointRadius as number);
+    for (const point of this.highLightPoints) {
+      context.beginPath(); path(point as any); context.fill();
+    }
+    
+    context.fillStyle = HIGHLIGHT_AIRLINE_COLOR;
+    path.pointRadius(2);
+    for (const l of this.highLightAirlines) {
+      this.drawBall(l, context, path);
+    }
   };
 
   private init = () => {
@@ -447,7 +478,6 @@ class Earth extends React.Component<Props, {}> {
       return
     }
     this.currentArea = c;
-    if (c && c.properties.name == 'CTU') console.log(c)
 
     const pos = d3.mouse(this.canvas.node() as any);
     this.updateTooltip(this.currentArea.properties.name, pos[1] + 10, pos[0] + 10);
@@ -466,8 +496,14 @@ class Earth extends React.Component<Props, {}> {
   private onClick = () => {
     let pos = this.projection.invert!(d3.mouse(this.canvas.node() as any))!;
     const city = this.getPoint(pos);
-    if (this.cityChosen && city && this.cityChosen != city) {
+    console.log(city)
+    if (this.cityChosen && city && this.cityChosen.properties.id != city.properties.id) {
       this.secondCityChosen = city;
+      const airlines = wholeAirLines.filter(l => l.start.name == (this.cityChosen!).properties.name
+        && l.end.name == (this.secondCityChosen!).properties.name) as Airline[];
+      this.highLightAirlines = airlines.map(l => getGeoJsonForAirline(l));
+      this.highLightPoints[1] = city;
+      
       this.cityDetail.hide();
       this.cityToCityDetail.show(this.cityChosen, this.secondCityChosen);
     } else {
@@ -475,7 +511,12 @@ class Earth extends React.Component<Props, {}> {
       this.secondCityChosen = undefined;
       if (this.cityChosen) {
         this.cityDetail.show(this.cityChosen);
+        const airlines = wholeAirLines.filter(l => l.start.name == (this.cityChosen!).properties.name) as Airline[];
+        this.highLightAirlines = airlines.map(l => getGeoJsonForAirline(l));
+        this.highLightPoints = [city!]
       } else {
+        this.highLightAirlines = [];
+        this.highLightPoints = [];
         this.cityDetail.hide();
       }
       this.cityToCityDetail.hide();

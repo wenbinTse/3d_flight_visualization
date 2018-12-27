@@ -59,41 +59,45 @@ export function getMapGeoData() {
  */
 export function getGeoJsonForAirlines(airlines: Airline[], cities: City[]) {
   id = mapMaxId;
-  const points: GeoPoint[] = cities.map(city => {
-    cityToId[city.name] = id;
-    return {
-      type: 'Feature',
-      geometry: {type: 'Point', coordinates: city.coordinates},
-      properties: {
-        ...city,
-        type: 'point',
-        id: id++
-      }
-    }
-  });
-
-  const lines: GeoLine[] = airlines.map(airline => {
-    return {
-      type: 'Feature',
-      geometry: {
-        type: 'LineString',
-        coordinates: [airline.start.coordinates, airline.end.coordinates] as [Pos, Pos]
-      },
-      properties: {
-        type: 'airline',
-        ballp: Math.random(), // the position of the ball
-        distance: d3.geoDistance(airline.start.coordinates, airline.end.coordinates),
-        id: id++,
-        startCityId: cityToId[airline.start.name],
-        endCityId: cityToId[airline.end.name],
-        num: airline.num
-      }
-    }
-  });
+  const points: GeoPoint[] = cities.map(city => getGeoJsonForCity(city, id++));
+  const lines: GeoLine[] = airlines.map(airline => getGeoJsonForAirline(airline, id++));
+  console.log(cityToId)
 
   return {
     lines,
     points
+  }
+}
+
+export function getGeoJsonForCity(city: City, cityId=-1) {
+  cityToId[city.name] = cityId;
+  return {
+    type: 'Feature',
+    geometry: {type: 'Point', coordinates: city.coordinates},
+    properties: {
+      ...city,
+      type: 'point',
+      id: cityId
+    }
+  }
+}
+
+export function getGeoJsonForAirline(airline: Airline, airlineId=-1) {
+  return {
+    type: 'Feature',
+    geometry: {
+      type: 'LineString',
+      coordinates: [airline.start.coordinates, airline.end.coordinates] as [Pos, Pos]
+    },
+    properties: {
+      type: 'airline',
+      ballp: Math.random(), // the position of the ball
+      distance: d3.geoDistance(airline.start.coordinates, airline.end.coordinates),
+      id: airlineId,
+      startCityId: cityToId[airline.start.name],
+      endCityId: cityToId[airline.end.name],
+      num: airline.num
+    }
   }
 }
 

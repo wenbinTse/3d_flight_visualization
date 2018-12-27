@@ -57,7 +57,7 @@
 }
 
 .Container:hover {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .Left_top_container {
@@ -74,9 +74,43 @@
   position: absolute;
   top: 0;
   right: 0;
-  height: 25%;
-  width: 25%;
+  height: 500px;
+  width: 500px;
   padding: 8px;
+  opacity: 0.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.City-detail-container > svg {
+  position: absolute;
+  width: 96%;
+  height: 96%;
+  left: 2%;
+  top: 2%;
+}
+
+.City-detail-container > img {
+  z-index: 10;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  opacity: 0.5;
+}
+
+.City-detail-container > img:hover {
+  opacity: 1;
+  height: 28px;
+  width: 28px;
+  cursor: pointer;
+}
+
+.City-detail-container > * {
+  margin: 0 !important;
 }
 
 .tooltip {
@@ -87,6 +121,16 @@
   cursor: default;
   opacity: 0.6;
   z-index: 4;
+}
+
+.explanation {
+  color: #666;
+  z-index: 5;
+  text-align: center;
+}
+
+#city_detail_whole_num, #city_detail_num, #citys_detail_whole_num, #citys_detail_num {
+  font-size: larger;
 }
 
 #backgroundCanvas {
