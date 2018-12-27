@@ -61,6 +61,7 @@ class Earth extends React.Component<Props, {}> {
   // ms to wait after dragging before auto-rotating
   rotationDelay = 3 * 1000;
   rotating = true;
+  rotatingBeforeDrag = false;
   allowRotate = true;
   // auto-rotation speed
   degPerSec = 1; degPerMs = this.degPerSec / 1000;
@@ -302,7 +303,7 @@ class Earth extends React.Component<Props, {}> {
       if (this.cityChosen && !this.secondCityChosen && cityChosenId == startCityId)
         return;
       
-      if (attention && geoDistance(center, d.geometry.coordinates[0]) > 400 / scale) {
+      if (attention && geoDistance(center, d.geometry.coordinates[0]) > 300 / scale) {
         context.strokeStyle = TRANSPARENT_AIRLINE_COLOR;
       } else context.strokeStyle = defaultColor;
   
@@ -437,7 +438,7 @@ class Earth extends React.Component<Props, {}> {
       this.showUsa = transform.k > this.detailFactor
     }
 
-    this.allowRotate = this.allowRotate && newScale < this.stopRotatingFactor;
+    this.rotating = this.rotating && newScale < this.stopRotatingFactor;
     console.log(this.projection.scale(), this.getCenter())
   };
 
@@ -462,6 +463,7 @@ class Earth extends React.Component<Props, {}> {
     this.r0 = this.projection.rotate().slice(0,2) as Pos;
     this.t0 = this.projection.translate();
 
+    this.rotatingBeforeDrag = this.rotating;
     this.stopRotation();
   };
   
@@ -477,7 +479,6 @@ class Earth extends React.Component<Props, {}> {
     const delta: Pos = [event.dx, event.dy];
     const speed = 100 / this.projection.scale();
     const r1: Pos = [this.r0[0] + delta[0] * speed, this.r0[1] - delta[1] * speed];
-    const t1: Pos = [this.t0[0], this.t0[1] + delta[1]];
     this.projection.rotate(r1);
     // if (!this.threeD)
     //   this.projection.translate(t1)
@@ -487,7 +488,8 @@ class Earth extends React.Component<Props, {}> {
   };
 
   private dragended = () => {
-    this.startRotation(this.rotationDelay)
+    if (this.rotatingBeforeDrag)
+      this.startRotation(this.rotationDelay)
   };
 
   private onMouseMove = () => {
@@ -540,7 +542,7 @@ class Earth extends React.Component<Props, {}> {
         this.highLightAirlines = airlines.map(l => getGeoJsonForAirline(l));
         this.highLightPoints = [city!]
         
-        console.log(geoDistance(this.getCenter(), this.cityChosen.geometry.coordinates), 400 / this.projection.scale())
+        console.log(geoDistance(this.getCenter(), this.cityChosen.geometry.coordinates), 300 / this.projection.scale())
         
       } else {
         this.highLightAirlines = [];
