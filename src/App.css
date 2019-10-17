@@ -1,0 +1,165 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.flyer {
+  stroke-dasharray: 100px, 100px;
+  stroke-dashoffset: 500;
+  animation: dash 3s linear infinite;
+  fill: none;
+  stroke-linecap: round;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.Container {
+  position: absolute;
+  padding: 8px;
+  background: aliceblue;
+  color: white;
+  display: flex;
+  opacity: 0.2;
+  align-items: center;
+  z-index: 3;
+}
+
+.Container > * {
+  margin: 8px !important;
+}
+
+.Container:hover {
+  opacity: 0.8;
+}
+
+.Left_top_container {
+  left: 0;
+  top: 0;
+}
+
+.Left_bottom_container {
+  left: 0;
+  bottom: 0;
+}
+
+.right_top_container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  background: none;
+  padding: 0;
+  margin: 0;
+  z-index: 3;
+  opacity: 0.8;
+}
+
+.right_top_container:hover {
+  opacity: 1;
+}
+
+.City-detail-container {
+  height: 480px;
+  width: 100%;
+  margin: 0 !important;
+  background: aliceblue;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: display 2s linear;
+}
+
+.City-detail-container > svg {
+  position: absolute;
+  width: 96%;
+  height: 96%;
+  left: 2%;
+  top: 2%;
+}
+
+.City-detail-container > img {
+  z-index: 10;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  opacity: 0.5;
+}
+
+.City-detail-container > img:hover {
+  opacity: 1;
+  height: 28px;
+  width: 28px;
+  cursor: pointer;
+}
+
+.City-detail-container > * {
+  margin: 0;
+}
+
+.tooltip {
+  position: absolute;
+  background: white;
+  display: none;
+  padding: 8px;
+  cursor: default;
+  opacity: 0.6;
+  z-index: 4;
+}
+
+.explanation {
+  color: #666;
+  z-index: 5;
+  text-align: center;
+}
+
+#city_detail_whole_num, #city_detail_num, #citys_detail_whole_num, #citys_detail_num {
+  font-size: larger;
+}
+
+#backgroundCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
